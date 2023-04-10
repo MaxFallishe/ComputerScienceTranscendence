@@ -16,6 +16,8 @@ class LinkedList2:
     def __init__(self):
         self.head = None
         self.tail = None
+        self.dummy_head = DummyNode()
+        self.dummy_tail = DummyNode()
 
     def add_in_tail(self, item):
         if self.head is None:
@@ -46,18 +48,18 @@ class LinkedList2:
     def delete(self, val, all=False):
         if self.head is None:
             return
-        dummy_node_1, dummy_node_2 = DummyNode(next=self.head), DummyNode(prev=self.tail)
-        self.head.prev, self.tail.next = dummy_node_1, dummy_node_2
-        node = dummy_node_1
+        self.dummy_head.next, self.dummy_tail.prev = self.head, self.tail
+        self.head.prev, self.tail.next = self.dummy_head, self.dummy_tail
+        node = self.dummy_head
         while node.next is not None:
             if node.value == val:
                 node.prev.next, node.next.prev = node.next, node.prev
                 if all is False:
                     break
             node = node.next
-        self.head, self.tail = dummy_node_1.next, dummy_node_2.prev
+        self.head, self.tail = self.dummy_head.next, self.dummy_tail.prev
         self.head.prev, self.tail.next = None, None
-        if dummy_node_1.next is None:
+        if self.dummy_head.next is None:
             self.head, self.tail = None, None
 
     def clean(self):
@@ -78,14 +80,14 @@ class LinkedList2:
         elif afterNode is None and self.len() > 0:
             self.add_in_tail(newNode)
         else:
-            dummy_node_1, dummy_node_2 = DummyNode(next=self.head), DummyNode(prev=self.tail)
-            self.head.prev, self.tail.next = dummy_node_1, dummy_node_2
+            self.dummy_head.next, self.dummy_tail.prev = self.head, self.tail
+            self.head.prev, self.tail.next = self.dummy_head, self.dummy_tail
             newNode.next, newNode.prev = afterNode.next, afterNode
             afterNode.next.prev, afterNode.next = newNode, newNode
 
-            self.head, self.tail = dummy_node_1.next, dummy_node_2.prev
+            self.head, self.tail = self.dummy_head.next, self.dummy_tail.prev
             self.head.prev, self.tail.next = None, None
-            if dummy_node_1.next is None:
+            if self.dummy_head.next is None:
                 self.head, self.tail = None, None
 
     def add_in_head(self, newNode):
