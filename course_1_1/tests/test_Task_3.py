@@ -222,3 +222,39 @@ class TestTask3(unittest.TestCase):
             da.append(i)
 
         self.assertRaises(IndexError, da.delete, 0)
+
+    def test_appen_after_delete__1(self):
+        count_of_elem = 21
+        da = DynArray()
+        # step 1
+        for i in range(count_of_elem):
+            da.append(i)
+        # step 2
+        ref_array = [i for i in range(count_of_elem)]
+        for i in range(0, 15+1):
+            da.delete(0)
+            del ref_array[0]
+        # step 3
+        for i in range(100, 150+1):
+            da.append(i)
+            ref_array.append(i)
+        res_array = [da[i] for i in range(da.count)]
+        self.assertEqual((res_array, da.count, da.capacity), (ref_array, 56, 64))
+
+    def test_appen_after_delete__2(self):
+        count_of_elem = 32
+        da = DynArray()
+        # step 1
+        for i in range(count_of_elem):
+            da.append(i)
+        # step 2
+        ref_array = [i for i in range(count_of_elem)]
+        for i in range(0, 20):
+            da.delete(0)
+            del ref_array[0]
+        # step 3
+        for i in range(100, 120):
+            da.append(i)
+            ref_array.append(i)
+        res_array = [da[i] for i in range(da.count)]
+        self.assertEqual((res_array, da.count, da.capacity), (ref_array, 32, 42))
