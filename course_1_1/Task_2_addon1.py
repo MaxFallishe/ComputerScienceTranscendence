@@ -25,7 +25,7 @@ class LinkedList2:
 
     def find(self, val):
         node = self.dummy_head.next
-        while node.next is not None:
+        while type(node) is not DummyNode:
             if node.value == val:
                 return node
             node = node.next
@@ -33,7 +33,7 @@ class LinkedList2:
     def find_all(self, val):
         suitable_nodes = []
         node = self.dummy_head.next
-        while node.next is not None:
+        while type(node) is not DummyNode:
             if node.value == val:
                 suitable_nodes.append(node)
             node = node.next
@@ -41,7 +41,7 @@ class LinkedList2:
 
     def delete(self, val, all=False):
         node = self.dummy_head.next
-        while node.next is not None:
+        while type(node) is not DummyNode:
             if node.value == val:
                 node.prev.next, node.next.prev = node.next, node.prev
                 if all is False:
@@ -57,7 +57,7 @@ class LinkedList2:
     def len(self):
         counter = 0
         node = self.dummy_head.next
-        while node.next is not None:
+        while type(node) is not DummyNode:
             counter += 1
             node = node.next
         return counter
