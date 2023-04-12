@@ -14,8 +14,8 @@ class DummyNode:
 
 class LinkedList2:
     def __init__(self):
-        self.dummy_head = DummyNode(v='d-head')  # to fix
-        self.dummy_tail = DummyNode(v='d-tail')  # to fix
+        self.dummy_head = DummyNode()
+        self.dummy_tail = DummyNode()
         self.dummy_tail.prev = self.dummy_head
         self.dummy_head.next = self.dummy_tail
 
