@@ -48,8 +48,7 @@ class DynArray:
             self.array[i] = self.array[i+1]
             i += 1
         self.count = self.count - 1
-        if self.count / self.capacity < 0.5:
-            if int(self.capacity / 1.5) <= 16:
-                self.resize(16)
-            elif int(self.capacity / 1.5) > 16:
-                self.resize(int(self.capacity / 1.5))
+        if self.count / self.capacity < 0.5 and int(self.capacity / 1.5) <= 16:
+            self.resize(16)
+        elif self.count / self.capacity < 0.5 and int(self.capacity / 1.5) > 16:
+            self.resize(int(self.capacity / 1.5))
