@@ -23,12 +23,3 @@ class Stack:
         if not self.size():
             return None
         return self.stack[0]
-
-
-stack = Stack()
-print(stack.stack)
-stack.push(1)
-stack.push(2)
-stack.push(3)
-stack.peek()
-print(stack.stack)
