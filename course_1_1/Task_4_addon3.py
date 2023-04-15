@@ -28,14 +28,19 @@ class Stack:
         return self.stack[0]
 
 
-def calculate_postfix_expression(stack_1: Stack) -> int:
+def calculate_postfix_expression(stack_1: Stack) -> Union[int, float]:
     stack_2 = Stack()
-    while stack_1.size():  # can be implemented using eval
+    while stack_1.size():  # Сan be implemented using eval
         if type(i := stack_1.pop()) is int:
             stack_2.push(i)
         if i == '+':
             stack_2.push(stack_2.pop() + stack_2.pop())
         elif i == '*':
             stack_2.push(stack_2.pop() * stack_2.pop())
+        elif i == '/':  # Should provide for zerodivision Error
+            divisible = stack_2.pop()
+            stack_2.push(stack_2.pop() / divisible)
+        elif i == '-':
+            stack_2.push(-stack_2.pop() + stack_2.pop())
         elif i == '=':
             return stack_2.peek()
