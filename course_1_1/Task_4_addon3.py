@@ -34,13 +34,20 @@ def calculate_postfix_expression(stack_1: Stack) -> Union[int, float]:
         if type(i := stack_1.pop()) is int:
             stack_2.push(i)
         if i == '+':
-            stack_2.push(stack_2.pop() + stack_2.pop())
+            first_term = stack_2.pop()
+            second_term = stack_2.pop()
+            stack_2.push(first_term + second_term)
         elif i == '*':
-            stack_2.push(stack_2.pop() * stack_2.pop())
+            first_factor = stack_2.pop()
+            second_factor = stack_2.pop()
+            stack_2.push(first_factor * second_factor)
         elif i == '/':  # Should provide for zerodivision Error
-            divisible = stack_2.pop()
-            stack_2.push(stack_2.pop() / divisible)
+            divisor = stack_2.pop()
+            divident = stack_2.pop()
+            stack_2.push(divident / divisor)
         elif i == '-':
-            stack_2.push(-stack_2.pop() + stack_2.pop())
+            subtrahend = stack_2.pop()
+            minuend = stack_2.pop()
+            stack_2.push(minuend - subtrahend)
         elif i == '=':
             return stack_2.peek()
