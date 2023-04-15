@@ -66,4 +66,11 @@ class TestTask4(unittest.TestCase):
         stack.push(3)
         stack.push(10)
         self.assertEqual(calculate_postfix_expression(stack), 1.4)
+    def test_postfix_calculation__7(self):
+        stack = Stack()
+        stack.push('=')
+        stack.push('+')
+        stack.push(5)
+        stack.push(10)
+        self.assertEqual(calculate_postfix_expression(stack), 15)
 
