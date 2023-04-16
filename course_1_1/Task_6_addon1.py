@@ -37,6 +37,3 @@ def is_string_palindrome(string: str) -> bool:
         if term_1 != term_2 and term_2 is not None:
             return False
     return True
-
-
-
