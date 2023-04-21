@@ -28,15 +28,16 @@ class OrderedList:
         if self.compare(new_node, self.head) in asc_filt_lst:
             self.head.prev, new_node.next = new_node, self.head
             self.head = new_node
-        elif self.compare(self.tail, new_node) in asc_filt_lst:
+            return
+        if self.compare(self.tail, new_node) in asc_filt_lst:
             self.tail.next, new_node.prev = new_node, self.tail
             self.tail = new_node
-        else:
-            node = self.head.next
-            while self.compare(new_node, node) not in asc_filt_lst:
-                node = node.next
-            new_node.prev, new_node.next = node.prev, node
-            node.prev.next, node.prev = new_node, new_node
+            return
+        node = self.head.next
+        while self.compare(new_node, node) not in asc_filt_lst:
+            node = node.next
+        new_node.prev, new_node.next = node.prev, node
+        node.prev.next, node.prev = new_node, new_node
 
 
     def find(self, val):
