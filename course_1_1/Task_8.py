@@ -28,15 +28,3 @@ class HashTable:
             if self.slots[slot_ind] == value:
                 return slot_ind
         return None
-#
-#
-# hash_t = HashTable(19, 3)
-# print(hash_t.hash_fun('a'))
-# print(hash_t.hash_fun('b'))
-#
-# print(hash_t.put('a'))
-# print(hash_t.put('b'))
-# print(hash_t.put('a'))
-# print("FIND", hash_t.find('a'))
-# print("FIND", hash_t.find('b'))
-# print(hash_t.slots)
