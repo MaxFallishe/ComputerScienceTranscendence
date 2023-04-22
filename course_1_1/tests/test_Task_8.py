@@ -2,7 +2,7 @@ from ..Task_8 import *
 import unittest
 
 
-class TestTask7(unittest.TestCase):
+class TestTask8(unittest.TestCase):
     # TEST HASH_FUN() METHOD
     def test_hashfun__1(self):
         hash_t = HashTable(19, 3)
