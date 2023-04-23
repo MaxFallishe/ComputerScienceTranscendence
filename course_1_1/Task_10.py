@@ -35,6 +35,9 @@ class HashTable:
 
 
 class PowerSet(HashTable):
+    def __init__(self, hash_size=100_000, hash_step=3):
+        super().__init__(hash_size, hash_step)
+
     def size(self) -> int:
         return len([slot for slot in self.slots if slot is not None])
 
@@ -64,18 +67,18 @@ class PowerSet(HashTable):
         return True
 
     def intersection(self, set2: 'PowerSet') -> 'PowerSet':
-        intersec_pset = PowerSet(self.hash_size, self.hash_step)
+        intersec_pset = PowerSet()
         [intersec_pset.put(slot) for slot in self.slots if slot in set2.slots and slot is not None]
         return intersec_pset
 
     def union(self, set2: 'PowerSet') -> 'PowerSet':
-        union_pset = PowerSet(self.hash_size, self.hash_step)
+        union_pset = PowerSet()
         union_pset.slots = self.slots
         [union_pset.put(slot) for slot in set2.slots if slot is not None]
         return union_pset
 
     def difference(self, set2: 'PowerSet') -> 'PowerSet':
-        diff_pset = PowerSet(self.hash_size, self.hash_step)
+        diff_pset = PowerSet()
         [diff_pset.put(slot) for slot in self.slots if slot not in set2.slots and slot is not None]
         return diff_pset
 
