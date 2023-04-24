@@ -33,6 +33,7 @@ class PowerSet:
         bucket = self.hash_fun(value)
         if value in bucket:
             bucket.remove(value)
+            self.item_count -= 1
             return True
         return False
 
