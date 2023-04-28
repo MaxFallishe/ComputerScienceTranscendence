@@ -29,6 +29,8 @@ class NativeCache:
 
     def get(self, key):
         ind = self.hash_fun(key)
+        if ind not in self.slots:
+            return None
         while self.slots[ind] != key and self.slots[ind] is not None:
             ind = (ind + self.step) % self.size
         if self.values[ind]:
@@ -42,4 +44,3 @@ class NativeCache:
             if gcd == 1:
                 return ind
             ind += 1
-
