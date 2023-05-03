@@ -1,0 +1,47 @@
+# Here I am working on improving the names of variables in the code, the main goal is:
+# 1. Make the names of variables as specific as possible.
+# 2. Make the variables fully and accurately describe the project entity that the variable represents.
+# 3. If a variable should denote some kind of calculation, then the name should characterize the problem/task itself and not the solution
+# Format: was - became  // comment to the context
+
+
+num_countries - number_of_countries_to_move  // количество стран рассматриваемых для переезда
+
+income_thresholds - countries_min_income_thresholds  // массив показателей минимального дохода необходимый для переезда в i-ю страну
+
+degree_thresholds - countries_requirements_of_university_degree_thresholds  // массив показателей необходимости наличия высшего образования для переезда в i-ю страну
+
+citizenship_thresholds - countries_thresholds_ignoring_for_citizenship_children  // массив показателей возможности переезда в i-ю страну для людей чьи родители имеют гражданство данной страны не смотря на критерии дохода и высшего образования
+
+num_missing_classmates - number_of_missing_classmates  // количество одноклассников не пришедших на выпускной
+
+classmate_money - classmates_incomes  // массив показателей дохода j-го одноклассника
+
+classmate_degrees - classmates_university_degrees  // массив показателей наличия высшего образования у j-го одноклассника
+
+parent_citizenship_nums - country_numbers_of_classmates_parents_citizenships  // массив гражданств родителей j-го одноклассника i-ой страны
+
+countries_nums_missing_friends - result_countries_numbers_with_missing_classmates  // итоговый массив с номерами стран, в которую переехал i-ый одноклассник
+
+friend_money - classmate_income  // доход i-го одноклассника
+
+friend_edu - classmate_university_degree  // наличие высшего образования у i-го одноклассника
+
+friend_citizenship- classmate_parents_citizenship  // гражданство родителей i-го одноклассника
+
+
+# P.S.
+# While writing new variables for project entities, I tried not only to follow the important tips listed at the beginning of this file,
+# but also to introduce several other, in my opinion, useful principles. For example, I strictly ensured that if an entity was initialized
+# in one variable, even if it was not represented by the variable itself, then in the future all other variables referring to this entity
+# should use the exact word/wording that was used for the first time.
+#
+# Illustrative examples:
+# in both variables 'countries_min_income_thresholds' and 'countries_thresholds_ignoring_for_citizenship_children',
+# the restriction abstraction was indicated by a common specific word 'thresholds'.
+# In all variables describing the essence of a classmate, it is the word 'classmate' that is used,
+# even when permanent implies information about several classmates at once.
+
+# I also tried to maintain uniformity in the formation of variables, especially if the variables are somewhat similar in their specifics,
+# for example, they store data in the same form, I pursued this goal so that anyone reading the code could catch these patterns
+# and it is easier to intuitively understand the logic of the code.
