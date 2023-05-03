@@ -27,7 +27,7 @@ friend_money - classmate_income  // доход i-го одноклассника
 
 friend_edu - classmate_university_degree  // наличие высшего образования у i-го одноклассника
 
-friend_citizenship- classmate_parents_citizenship  // гражданство родителей i-го одноклассника
+friend_citizenship - classmate_parents_citizenship  // гражданство родителей i-го одноклассника
 
 
 # P.S.
