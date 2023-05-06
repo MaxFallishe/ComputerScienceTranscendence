@@ -1,0 +1,199 @@
+# 6.1 -----------------------------------------------------------------------------------------------------------------
+# During the process of naming variables, it is worth considering the level of abstraction
+# at which the class or function works, here I will give 5 examples where you can more clearly take
+# into account the levels of abstraction in variable names.
+
+# 1st Example
+# Context: the function that save sended file to the database from the user in the telegram bot
+# Here we can see that we have some function that was created for adding file to database and yes,
+# most likely the name of the function itself should be replaced, but now we are concentrating on the variable inside
+# this function. The original name of this variable is more likely how we get this value, so 'file_from_tuple' mean
+# we get this variable from some turple. Instead, we can use name 'file_obj' this will give us the right level of
+# abstraction for the variable in current function.
+
+# WAS
+def add_file(message):
+    ...
+    file_from_tuple = message.photo[-1].file_unique_id
+    ...
+
+# BECOME
+def add_file(message):
+    ...
+    file_obj = message.photo[-1].file_unique_id
+    ...
+
+
+# 2nd Example
+# Context: the function that send to user of telegram bot interface with new buttons and some message
+# Here we can see that name 'skip_file' it is not at the right level of abstraction, firstly it is not clear that the
+# structure that we received is markup, secondly, it clarifies what exactly this markup contains when it is enough for
+# us to display that in this variable we form markup that we will then send to the user.
+
+# WAS
+def leave_a_review_step_3(message, user_data, review_data):
+    ...
+    skip_file = generate_markup(button)
+    ...
+
+# BECOME
+def leave_a_review_step_3(message, user_data, review_data):
+    ...
+    markup = generate_markup(button)
+    ...
+
+
+# 3rd Example
+# Context: the function that write user review to database, review here is complex termin that include text, rating
+# and etc.
+# Here programmer try to specifically indicate what the variable is used for, but not what it is, we can fix this
+# by giving the variable a more abstract name 'review_obj'. Thanks to this, the variable now correctly reflects the
+# abstraction level at which the function operates.
+
+# WAS
+def leave_a_review_step_4(message, user_data, review_data):
+    ...
+    tuple_of_values_to_save_review = (message.from_user.id, user_data['chosen_district_office_id'], review_data['rating'], comment, binary, current_timestamp)
+    ...
+
+# BECOME
+def leave_a_review_step_4(message, user_data, review_data):
+    ...
+    review_obj = (message.from_user.id, user_data['chosen_district_office_id'], review_data['rating'], comment, binary, current_timestamp)
+    ...
+
+
+# 4th Example
+# Context: a program that allows you to simulate the weather in console, for example, choice set rain or add clouds.
+# In this case, we see that the original variable 'colors_lst' is not suitable for the level of abstraction,
+# since it is a level lower, and it is worth pointing out directly that the colors refer specifically
+# to the rainbow entity.
+
+# WAS
+...
+colors_lst = ['red', 'orange', 'yellow', 'green', 'blue', 'purple']
+...
+
+# BECOME
+...
+rainbow_spectrum = ['red', 'orange', 'yellow', 'green', 'blue', 'purple']
+...
+
+
+# 5th Example
+# Context: the program analyzes the strata of the population of the countries through the prism of collar.
+# As part of the program, it is more correct to enter the variable 'country_population'since this will describe not
+# the way we got the variable, but the meaning that we put into it, and with the level of abstractions in the code,
+# everything will be logical.
+
+
+# WAS
+...
+sum_of_workers = bluecollar_workers + whitecollar_workers + blackcollar_workers
+...
+
+# BECOME
+...
+country_population = bluecollar_workers + whitecollar_workers + blackcollar_workers
+...
+
+
+# 6.2  -----------------------------------------------------------------------------------------------------------------
+# When writing code, it is possible and necessary to use terms from computer science, names of algorithms and patterns,
+# mathematical terms. Such terms tell a lot of useful information to programmers who will read the code.
+# Below I will give four examples where technical terms from computer science could be used as variable names.
+
+# 1st Example
+
+algorithm_complexity = ...
+
+# Context: For example, if we write a system that will automatically check the effectiveness of algorithms,
+# it would be reasonable tcalculate_complexity()o use the term 'computational complexity of algorithm' or simply 'algorithm complexity' -
+# any programmer will understand what is meant
+
+# 2st Example
+
+bitmask = ...
+
+# Context: bitmask is a well-known term in computer science, for example, when implementing the Blum filter,
+# so I think it's a good idea to give this term as an example
+
+# 3st Example
+daemon_num = ...
+
+# Context: Daemon is a great term to describe a computer program that runs in the background,
+# in the example above I gave an example of the variable 'daemon_num' which clearly indicates the number of similar programs.
+
+# 4th Example
+latency_indicator = ...
+
+# Context: Latency is a well-known term in the framework of evaluating the effectiveness of web systems, to be more specific,
+# it allows you to estimate how long it takes to receive a response from the moment a request is sent to the server.
+# In my example, I named the variable 'latency_indicator' which serves as an indicator of the current latency
+
+# 6.3  -----------------------------------------------------------------------------------------------------------------
+# At this point, I want to give three examples where variable names are given with context because only few names
+# make sense on their own, all other names should be placed in a specific context -
+# classes, functions and namespaces with correctly chosen names.
+
+# 1st Example
+...
+@avoid_errors(function_to_which_to_flip=main_menu_module.start)
+def check_availability_of_court_cases(message: Message, user_data: Dict) -> None:
+    cases = get_the_court_cases(user_data["auth_iin"])  # <--- HERE
+    if cases and if type(cases) is XMLDictNode:
+            case_number = cases['number']
+...
+
+# Context: In the presented function, it makes no sense to designate the variable 'cases' in the form of 'court_cases'
+# because it is clear that the function itself in its very name clearly calls for the fact that it processes
+# court cases and in fact it is quite logical that in the function itself we interpret court cases under 'cases'
+
+# 2nd Example
+...
+@bot.message_handler(content_types=['document', 'photo', 'audio', 'video', 'voice', 'text'])
+def add_file(message):
+    if message.content_type == 'document':
+        file_name = message.document.file_name  # <--- HERE
+        file_info = bot.get_file(message.document.file_id)  # <--- HERE
+...
+
+# Context: In the context of the current function, we understand that the main entity with which we will work is a file,
+# so here we have every right to use just the variable 'file' or as in the example 'file_name' and 'file_info',
+# because it is clear to which entity these variables are referred. But it is important to note that with this approach,
+# it is important not to add more entities that could be confused with a 'file' for various reasons.
+
+# 3rd Example
+...
+class Song:
+    author = 'Jack'
+    duration = 324
+...
+
+# Context: Naming one of the variables 'author' in the 'Song' class is quite the right decision,
+# since we will access the variable directly through the class context.
+
+# 6.4  -----------------------------------------------------------------------------------------------------------------
+# Below I will give examples of how I shortened some of the variables to fit them into 8-20 characters -
+# the optimal length for the variable name
+
+# 1st Example
+country_numbers_of_classmates_parents_citizenships -> classmates_quotas
+
+# 2nd Example
+result_countries_numbers_with_missing_classmates -> classmates_residency
+
+# 3rd Example
+number_of_cases_for_the_requested_iin_r_bin -> cases_num
+
+# 4th Example
+reference_link_for_district_court -> distr_court_ref_link
+
+# 5th Example
+district_courts_objects_list -> distr_courts_objects
+
+
+
+
+
+
