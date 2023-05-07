@@ -111,14 +111,14 @@ algorithm_complexity = ...
 # it would be reasonable tcalculate_complexity()o use the term 'computational complexity of algorithm' or simply 'algorithm complexity' -
 # any programmer will understand what is meant
 
-# 2st Example
+# 2nd Example
 
 bitmask = ...
 
 # Context: bitmask is a well-known term in computer science, for example, when implementing the Blum filter,
 # so I think it's a good idea to give this term as an example
 
-# 3st Example
+# 3rd Example
 daemon_num = ...
 
 # Context: Daemon is a great term to describe a computer program that runs in the background,
