@@ -1,0 +1,263 @@
+# 7.1 ------------------------------------------------------------------------------------------------------------------
+# Developers traditionally make a lot of mistakes with the names of Boolean variables. However, we can follow the
+# main rule when naming Boolean variables: assign Boolean variables names that unambiguously imply the value true or false.
+# Here I want to give some examples of boolean variables right naming, in the format "was - became"
+
+# 1st Example
+# Context: In the example below, we have a boolean variable 'running' with which we want to control the execution of the
+# loop in a simple program where the user is asked to guess a number.
+# In this case, I decided to radically change the Boolean variable, namely to 'is_interrupt', since in the program the
+# main function of the variable is to end the program when the variable is True.
+
+# WAS
+...
+running: bool = True
+while running:
+...
+
+# BECAME
+...
+is_interrupt: bool = False
+while not is_interrupt:
+...
+
+# 2nd Example
+# Context: The program has some functionality available only to authorized users.
+# Based on the fact that in the future we will need to check the checkbox of whether the user is authorized,
+# it will be correct to name the variable 'user_auth_complete' thereby showing whether the authorization process
+# has been completed successfully or not. So it is clear that this is a Boolean variable.
+
+# WAS
+...
+user_auth: bool = False
+...
+
+# BECAME
+...
+user_auth_complete: bool = False
+...
+
+# 3rd Example
+# Context: The program is a game where you need to feed a pet.
+# Initially, in the program, the variable responsible for the indicator of whether the pet wants to eat was called
+# 'flag1', which is an unrepresentative name, so I changed the name to 'is_hungry' in accordance with the rules
+# of correct naming.
+
+# WAS
+...
+flag1 = True
+...
+
+# BECAME
+...
+is_hungry: bool = True
+...
+
+# 4th Example
+# Context: In the program, we check the presence of the user in the database and write the result of this action to
+# the Boolean variable.
+# Initially, the name of the variable is 'user_in_db', however, in this case, with the above-described functionality
+# of the program, there is the possibility of more correct naming for the variable, namely, calling it 'user_found',
+# this is the right decision since the word 'found' is one of the standard for naming boolean values when searching.
+
+# WAS
+...
+user_in_db = False
+...
+
+# BECAME
+...
+user_found: bool = False
+...
+
+# 5th Example
+# Context: The script reads data from the sensor, before reading it, you need to make sure there is a connection.
+# Initially, the name did not express the essence of the variable and was also responsible for the entire abstract
+# readiness of the sensor at once, so I preferred to change the name to 'is_connected', which would clearly make it
+# clear by its name that this is a boolean variable and is directly responsible for whether there is a connection
+# to the sensor.
+
+# WAS
+...
+sensor_ready = False
+...
+
+# BECAME
+...
+is_connected: bool = False
+...
+
+# 7.2 ------------------------------------------------------------------------------------------------------------------
+# There is a standard set of typical boolean variable names (not containing the 'is' keyword) that are useful
+# to always apply in appropriate cases, for example: found, done, success, error.
+# Below I will describe some examples when you can use such variables.
+
+# 1st Example
+# Context: The get_the_court_case() function tries to get information about a specific case, but there is a chance
+# that the requested case will not be found in the system.
+# In the 'found' variable, we store a Boolean value that displays the success of the search operation.
+
+# WAS
+...
+court_case = get_the_court_case()
+...
+
+# BECAME
+...
+court_case = get_the_court_case()
+if court_case:
+    found = True
+...
+
+# 2nd Example
+# Context: In this example, the function of sending notifications to users is considered, in which there is a flag
+# showing the completion of sending notifications.
+# As a refactoring, I decided to change the name of the variable to 'done' which would show that the operation
+# is completed.
+
+# WAS
+...
+def notification_module():
+    flag = False
+...
+
+# BECAME
+...
+def notification_module():
+    done = False
+...
+
+# 3rd Example
+# Context: This function checks the information about the case from the database and returns the received information
+# indicating at the same time if the request was made correctly
+# In this case, the 'success' variable was used as a flag that all data was successfully received.
+
+# WAS
+...
+def get_the_legitimacy_status_of_case(case_number: str) -> str:
+    process_ended = False
+...
+
+# BECAME
+...
+def get_the_legitimacy_status_of_case(case_number: str) -> str:
+    success = False
+...
+
+# 7.3 ------------------------------------------------------------------------------------------------------------------
+# If you plan to use a variable not only in a loop, or if the active variable is used in nested loops, then you should
+# give it a more expressive name. In this paragraph, I will consider the case when, instead of the standard naming of
+# a variable in the 'i' 'j' 'k' loop, it is more obvious to use a more expressive name.
+
+# 1st Example
+# Context: This solution is designed to solve a mathematical problem on a combination of mathematical symbols
+# and letters.
+# Since the indexes of these cycles are actively used in sufficiently voluminous calculations, it makes sense to give
+# them more understandable names.
+
+
+# WAS
+...
+def find_optimal_math_symbols(user_string):
+    free_indx_comb = [k for k in permutations([j for j in range(vars_num) if j != i])]
+    math_oper_comb = [k for k in combinations(math_symbols, vars_num-1)]
+    for i in free_indx_comb:
+        for j in math_oper_comb:
+...
+
+# BECAME
+...
+def find_optimal_math_symbols(user_string):
+    free_indx_comb = [k for k in permutations([j for j in range(vars_num) if j != i])]
+    math_oper_comb = [k for k in combinations(math_symbols, vars_num-1)]
+    for comb_ind in free_indx_comb:
+        for math_comb in math_oper_comb:
+...
+
+# 7.4 ------------------------------------------------------------------------------------------------------------------
+# The use of antonyms in appropriate cases - makes the code more consistent and makes it easier to read and
+# understand.
+# Here are some examples of using antonyms in variables.
+
+
+# 1st Example
+# Context: In this situation, inside the loop, you need to highlight the first and last characters in the name of
+# the organization, for this the antonymic variables 'end_char' and 'start_char' are used.
+
+# WAS
+...
+for i in range(1, courts_count[0][0]+1):
+    char1 = courts[i][0]
+    char2 = courts[i][-1]
+...
+
+# BECAME
+...
+for i in range(1, courts_count[0][0]+1):
+    start_char = courts[i][0]
+    end_char = courts[i][-1]
+...
+
+# 2nd Example
+# Context: The program processes two lists - active clients and blocked ones.
+# Initially, there was no antonymy in the names of variables, but after adding it, it became clearer that
+# both lists are close to each other in their purpose.
+
+# WAS
+...
+clients = []
+locked_clients = []
+...
+
+# BECAME
+...
+unlocked_clients = []
+locked_clients = []
+...
+
+# 7.5 ------------------------------------------------------------------------------------------------------------------
+# Temporary variables are used to store intermediate results of calculations during a short section of code, as well as,
+# for example, utility values of the program. They are usually given the names temp, x, or some other
+# equally vague and undescribable. It's bad.
+
+# 1st Example
+# Context: The presented code shows the moment of formation of a temporary variable for the generated keyboard,
+# which is used exclusively in the 'send-message' function.
+# And although the spectrum of its visibility is relatively small, it will be much clearer to call it in accordance
+# with its 'markup' functionality, it will not be possible to completely remove the variable in this case, since this
+# will lengthen the string too much to call the 'send_message' function
+
+# WAS
+...
+buttons_text = bot_buttons_phrases_dict[user_data["language"]]['rate_buttons']
+x = generate_markup(buttons_text)  # <--- will be changed
+bot.send_message(message.chat.id, bot_phrases_dict[user_data["language"]]['ask_user_to_rate_conversations'], reply_markup=x)
+...
+
+# BECAME
+...
+buttons_text = bot_buttons_phrases_dict[user_data["language"]]['rate_buttons']
+markup = generate_markup(buttons_text)   # <--- changed
+bot.send_message(message.chat.id, bot_phrases_dict[user_data["language"]]['ask_user_to_rate_conversations'], reply_markup=markup)
+...
+
+# 2nd Example
+# Context: In this program, we are trying to find how to most effectively divide the numbers between two arrays,
+# in the presented segment we calculate the largest possible number that we can afford to transfer from one array
+# to another.
+# And just here we give a clearer value to the temporary variable, while trying to keep within the
+# optimal length (8-20 characters).
+
+# WAS
+...
+ideal_sum_transfer_to_list1 = round(abs(sum(output_list1) - sum(output_list2)) / 2)
+mx_transf = ideal_sum_transfer_to_list1 * 2 - 1  # <--- will be changed
+for i in range(0, max_accept_sum_transfer_to_list1):
+...
+
+# BECAME
+...
+ideal_sum_transfer_to_list1 = round(abs(sum(output_list1) - sum(output_list2)) / 2)
+max_transfer_sum = ideal_sum_transfer_to_list1 * 2 - 1  # <--- changed
+for i in range(0, max_accept_sum_transfer_to_list1):
+...
