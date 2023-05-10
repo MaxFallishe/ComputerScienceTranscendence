@@ -1,0 +1,237 @@
+# At this stage, in order to improve the clarity of the code, I will continue to work on improving the naming of
+# variables in the code, specifically, pay attention to the following punts:
+# 1. Do not name variables that differ in their purpose with similar names.
+# 2. Almost always do not use numbers in the name.
+# 3. Avoid symbols that can be confused with other symbols.
+# 4. Do not use uninformative names.
+# 5. Do not use names that are not obvious to code readers.
+# 6. Use the correct specifiers.
+# 7. Do not include the type and scope in the name.
+
+
+# Example №1
+# Context: The presented function determines which language the user has chosen using a message to the bot and then
+# performs some operations with this variable, for example, writes it to the database.
+# Comments: I decided to give the variable a more explicit name reflecting its essence, at least putting forward
+# the conceptual meaning of the variable from "some language" to "the language that is now tied to the user".
+# I also tried to fit in 20 characters the specification that the language in the variable is in ISO-639 format.
+
+# WAS
+...
+def get_user_language(message) -> None:
+    if message.text in bot_buttons_phrases_dict['general']['language_selection_request_buttons']:
+        if message.text == bot_buttons_phrases_dict['general']['language_selection_request_buttons'][0]:
+            lang = 'en'  # <--- will be changed
+...
+
+# BECAME
+...
+def get_user_language(message) -> None:
+    if message.text in bot_buttons_phrases_dict['general']['language_selection_request_buttons']:
+        if message.text == bot_buttons_phrases_dict['general']['language_selection_request_buttons'][0]:
+            user_linked_iso_lang = 'en'  # <--- changed
+...
+
+# Example №2
+# Context: In the presented function, the program writes user data to the database, including the time of registration,
+# the moment of the first message from the user.
+# Comments: Here I changed the name of the local variable 'datetime' as it generally overlaps with the standart module
+# "datetime" and is not informative at all.
+
+# WAS
+...
+def write_user_to_db(message, lang) -> None:
+    user_chat_id = message.chat.id
+    user_alias = message.chat.username
+    datetime = str(datetime.datetime.now())  # <--- will be changed
+...
+
+# BECAME
+...
+def write_user_to_db(message, lang) -> None:
+    user_chat_id = message.chat.id
+    user_alias = message.chat.username
+    datetime_in_moment = str(datetime.datetime.now())  # <--- changed
+...
+
+
+# Example №3
+# Context: Here, the 'columns' variable contains the names of the columns that will be inserted for a more visual
+# and understandable SQL query.
+# Comments: I gave a clearer name characterizing the content of the tuple, now it is clear that it contains exactly
+# the names of columns from the database where we will insert the values
+
+# WAS
+...
+def write_down_user_question_into_db(message, lang):
+    columns = ('from_user_chat_id', 'question_text', 'question_date')  # <--- will be changed
+...
+
+# BECAME
+...
+def write_down_user_question_into_db(message, lang):
+    column_names = ('from_user_chat_id', 'question_text', 'question_date')  # <--- changed
+...
+
+
+
+# Example №4
+# Context: This line is a continuation of the previous example, a variable is declared here that is responsible
+# for the values that we will insert into the database.
+# Comments: I decided to generalize the name of this variable by displaying its content so that it would be clear
+# what we are inserting into the database and what we are processing.
+
+# WAS
+...
+def write_down_user_question_into_db(message, lang):
+    values = (message.chat.id, message.text, message.date)  # <--- will be changed
+...
+
+# BECAME
+...
+def write_down_user_question_into_db(message, lang):
+    user_message_content = (message.chat.id, message.text, message.date)  # <--- changed
+...
+
+# Example №5
+# Context: Here we need to create a list for transmitting data to the external API.
+# Comments: Since the list contains basic information about the message that will help distinguish it from any other,
+# the list was named as the 'message_basic_data'.
+
+# WAS
+...
+def write_down_user_question_into_excel_sheet(message, lang):
+    input_data = [[message.text], [str(datetime.datetime.now())], [message.chat.id]]  # <--- will be changed
+...
+
+# BECAME
+...
+def write_down_user_question_into_excel_sheet(message, lang):
+    message_basic_data = [[message.text], [str(datetime.datetime.now())], [message.chat.id]]  # <--- changed
+...
+
+# Example №6
+# Context: In the example presented, we are trying to identify the category of partnership that the user has chosen.
+# Comments: Instead of 'result', which is used initially, a more informative name was chosen, reflecting that the text
+# of the message that it stores is and is further processed as the textual name of the partnership category.
+
+# WAS
+...
+def get_user_partnership_category(message, lang):
+    result = message.text  # <--- will be changed
+...
+
+# BECAME
+...
+def get_user_partnership_category(message, lang):
+    partnership_category = message.text  # <--- changed
+...
+
+# Example №7
+# Context: In this part of the application, we save the user's application and then send it for moderation.
+# Comments: The word 'application' included in the variable name, however, can be read in two ways - implying both the
+# program and the application itself. Therefore, the name was changed for the sake of uniformity with the entity
+# in accordance with the name of the function.
+
+# WAS
+...
+def send_approve_requests_to_moderators(message, quiz_data, lang):
+    quiz_data["referral_telegram_id"] = message.text
+    application_status = 'await'  # <--- will be changed
+...
+
+# BECAME
+...
+def send_approve_requests_to_moderators(message, quiz_data, lang):
+    quiz_data["referral_telegram_id"] = message.text
+    request_status = 'await'  # <--- changed
+...
+
+# Example №8
+# Context: Here is a constant used in the program to send messages and users to a special VIP chat.
+# Comments: During refactoring, it was decided to change this variable due to the meaninglessness of the 'num1' part,
+# which did not add context to the constant.
+
+# WAS
+...
+vip_chat_num1 = -1001548750662  # <--- will be changed
+...
+
+# BECAME
+...
+vip_chat_id = -1001548750662  # <--- changed
+...
+
+# Example №9
+# Context: Below is a part of the functionality for displaying user referrals in the format of a message in
+# the messenger.
+# Comments: The original formulation of the fact that, in fact, a number is a text is fundamentally wrong,
+# especially that it is very convenient to express the essence using the 'count' specifier.
+
+# WAS
+...
+def project_status(message, lang):
+    referrals_text = sql_query_to_db.make_query(query_text)[0][0]  # <--- will be changed
+...
+
+# BECAME
+...
+def project_status(message, lang):
+    referrals_count = sql_query_to_db.make_query(query_text)[0][0]  # <--- changed
+...
+
+# Example №10
+# Context: During the operation of the web scraper, the user is given a choice of which objects he wants to get in the
+# process, the variable 'search_text_2gis' is responsible for this.
+# Comments: It was decided to give the variable a more generalized name reflecting its true content,
+# and the value of 'landscape_unit_type' fits as good as possible.
+
+# WAS
+...
+search_text_2gis = "Декоративные сооружения"  # <--- will be changed
+...
+
+# BECAME
+...
+landscape_unit_type = "Декоративные сооружения"  # <--- changed
+...
+
+# Example №11
+# Context: By collecting all the data from the map, we save information about each object, including the available
+# text description.
+# Comments: While maintaining consistency with the previous example (since these are variables within the same program
+# and located quite close), the variable name was changed in favor of more accurately characterizing the "description"
+# that we receive.
+
+# WAS
+...
+description = browser.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/').text   # <--- will be changed
+...
+
+# BECAME
+...
+landscape_unit_descr = browser.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/').text   # <--- changed
+...
+
+# Example №12
+# Context: Thanks to the code below, we have the opportunity to get all possible links to each building presented
+# on the site.
+# Comments: I renamed the variable because the word 'table' is not the best word for the name of the variable,
+# in addition, there was an indication of the type directly in the variable, which, along with the visibility area,
+# is better to exclude in most cases from the name of the variable.
+
+# WAS
+...
+for page_iter in range(1, 10+1):
+    r = requests.get(f"https://www.reformagkh.ru/a={page_iter}&limit=100", headers=HEADER)
+    r_soup = BeautifulSoup(r.text, 'html')
+    table_of_urls__list = r_soup.find('table', 'table al-edges al-center').find("tbody").find_all("a", "text-dark")    # <--- will be changed
+...
+
+# BECAME
+...
+for page_iter in range(1, 10+1):
+    r = requests.get(f"https://www.reformagkh.ru/a={page_iter}&limit=100", headers=HEADER)
+    r_soup = BeautifulSoup(r.text, 'html')
+    buildings_links = r_soup.find('table', 'table al-edges al-center').find("tbody").find_all("a", "text-dark")    # <--- changed
+...
