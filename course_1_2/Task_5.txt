@@ -1,0 +1,212 @@
+# 3.1 -----------------------------------------------------------------------------------------------------------------
+# What name to give to a class or object is not always the easiest question, in a good way, the names of classes and
+# objects should be nouns and their combinations: Customer, WikiPage, Account and AddressParser.
+# The class name definitely doesn't have to be a verb. It is bad practice to use words such as Manager, Processor,
+# Data or Info in class names.
+# Here are some examples of my code review that fix typical errors in this topic.
+
+# Example №1
+# Context: The class presented below is a client entity (client server model) which can connect to a multi-user chat.
+# Comments: In the current conjuncture, there is no need to add the prefix 'My' to the name.
+
+# WAS
+...
+class MyClient:
+...
+
+# BECAME
+...
+class Client:
+...
+
+# Example №2
+# Context: The class presented below is a chat entity that runs on the server side (client-server model) to which
+# users can connect.
+# Comments: In this case, the original name of the class can be confusing, because it may seem that the class represents
+# some kind of personal chat with itself. Especially considering that in the future the 'PrivateChat' class is created,
+# it is important to remove the prefix 'My' from the name.
+
+# WAS
+...
+class MyChat:
+...
+
+# BECAME
+...
+class Chat:
+...
+
+# Example №3
+# Context: The presented class is a model in the Django framework responsible for the essence of user comments.
+# Comments: In this case, the excessive ending 'ing' introduces a large level of uncertainty when reading, at the same
+# time there is an excellent alternative - to name the class 'Comment' which will more fully characterize the essence.
+
+# WAS
+...
+class Commenting(models.Model):
+...
+
+# BECAME
+...
+class Comment(models.Model):
+...
+
+# Example №4
+# Context: The class described below is the essence of the transaction created by the user and put on the market
+# for implementation.
+# Comments: In this case, the word 'Create' does not refer to the class in any way, especially considering that the
+# logic of the program does not provide a separate class for the query deletion function, so it would be more
+# concise to call the 'MarketDealView' class.
+
+# WAS
+...
+class MarketRequestCreateView(viewsets.ModelViewSet, BalanceMixin):
+...
+
+# BECAME
+...
+class MarketDealView(viewsets.ModelViewSet, BalanceMixin):
+...
+
+# Example №5
+# Context: The class below is a descendant of the App Config class from the Django framework used to configure the
+# 'flights' application.
+# Comments: In general, the name of the class describes the meaning of the entity, but there is one omission that was
+# not taken into account, namely, it is not clear that this is the configuration of the 'flights' application, and not
+# the 'flight' entity, for example, so it is worth clarifying.
+
+# WAS
+...
+class FlightsConfig(AppConfig):
+...
+
+# BECAME
+...
+class FlightsAppConfig(AppConfig):
+...
+
+# 3.2 -----------------------------------------------------------------------------------------------------------------
+# It is good practice to choose one word for each concept and stick to it throughout the entire project.
+# For example, if several classes have a method responsible for "getting elements", then it is better to call it 'get'
+# everywhere, and not so that in one place it is 'get', in another 'fetch' and so on. The same goes for the names of
+# objects, because what makes 'DeviceManager' fundamentally different from 'ProtocolController' - conceptually nothing,
+# and there and there it is some kind of control element only for some reason with synonymous words. It is worth
+# understanding the subtleties of the meanings of words, but still, when writing, focus on who will read the code.
+
+
+# Example №1
+# Context: The application from which the example is taken is a small module in the CM area, the classes being analyzed
+# are responsible for working with the hyperparameter of the model.
+# Comments: Considering that earlier in the code base of the project there is already a mention and use of the
+# hyperparameter entity, it would be more correct to make a change in the reviewed function in favor of unifying
+# the HyperParamsSegmentation entity.
+# Actually, I even created a pull request in this open source project (https://github.com/AsakoKabe/AdeleCV/pull/5).
+
+# WAS
+...
+class HPOptimizer:
+...
+
+# BECAME
+...
+class HyperParamsOptimizer:
+...
+
+# Example №2
+# Context: The purpose of the program is to simulate the gaming processes of the card game 'Hearthstone', one of the
+# fundamental classes in the program of classes in the program is Kettle Manager.
+# Comments: Since the class already has examples of similar mechanics/concepts, namely "refresh_tag
+# and 'refresh_full_state', it is worth replacing reload -> refresh
+
+# WAS
+...
+def reload_state (self):
+...
+
+# BECAME
+...
+def refresh_state (self):
+...
+
+# Example №3
+# Context: Along with the 'KettleManager' class, there is also a 'Kettle' class in the file, which is smaller.
+# Comments: In the 'KettleManager' class, there are already methods responsible for some data processing and there they
+# are named using the keyword 'process', which is why it is worth changing the name of the method, given that it is
+# exactly the same in specifics as the method in the 'Ketle' class
+
+# WAS
+...
+def handle_packet(self):
+...
+
+# BECAME
+...
+def process_packet(self):
+...
+
+# Example №4
+# Context: The 'BaseGame' class contains methods for various events that can be triggered, in particular the abilities
+# of minions. Examples: Battlecry, Deathrattle.
+# Comments: Considering that earlier in the code the equivalent method of calling the battlecry effect using
+# 'trigger_batllecry' is mentioned, so we change the name of the method associated with.
+
+# WAS
+...
+def activate_deathrattle(self, source, actions):
+...
+
+# BECAME
+...
+def trigger_deathrattle(self, source, actions):
+...
+
+# Example №5
+# Context: In the above example, to create a perfume variable with the smell of lavender, the Parfume class is used,
+# which accepts the objects 'lavender', 'oil', 'water'.
+# Comments: Earlier in the codified database, you can notice the following variants of flavors of this class
+# 'parfum_meat_flower_smell', 'parfum_cactus_smell', 'parfum_dirt_smell', which tells us what best promotes the
+# spread and use of the "Smell" in the "Fragrance".
+
+# WAS
+...
+parfum_lavander_aroma = Parfum(lavand, oil, water)
+...
+
+# BECAME
+...
+parfum_lavander_smell = Parfum(lavand, oil, water)
+...
+
+# Example №6
+# Context: The presented method is one of the many methods of the 'CourtChief' class  which in turn displays the class
+# which in turn reflects the essence of the manager of the judicial institution.
+# Comments: in this case, since the program, if necessary, indicates that fo example some institution is subordinate
+# to another - the word 'subordinate' is used, we will rename the method in accordance with this naming rule within
+# the project.
+
+# WAS
+...
+def change_his_court(self, court):
+...
+
+# BECAME
+...
+def change_subordinate_court(self, court):
+...
+
+# Example №7
+# Context: The 'JudicialEntity' class is quite broad, but even at the beginning of the project, the objects themselves
+# were inherited from it - be they users, citizens and institutions.
+# Comments: For some reason, the senior judge was originally named here in the format "reslover", but everywhere else
+# in the project it is 'judge' that is used.
+
+# WAS
+...
+senior_resolver = JudicialEntity(2, 12, False)
+...
+
+# BECAME
+...
+senior_judge = JudicialEntity(2, 12, False)
+...
+
