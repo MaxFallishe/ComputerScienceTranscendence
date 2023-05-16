@@ -1,0 +1,90 @@
+# At this stage, I would like to move on to the analysis of good practices in the context of the OOP paradigm.
+# To begin with, let's look at recommendations that will help maintain code clarity within such aspects of OOP as
+# the Interface and Constructors (namely constructor overriding).
+
+# 3.1 -----------------------------------------------------------------------------------------------------------------
+
+# Example №1
+# Context: In this case, we have a 'Pizza' class that assumes 3 options: 1 - you can manually select ingredients and
+# spice level; 2 - make a pizza from the 'Packet' class a package containing all the ingredients and the spice
+# level; 3 - make a pizza from the 'Box' class of a box with a large amount of Packets.
+# Comments: it was decided to make a decomposition of the upcoming process of writing a serializer through factory
+# methods, names describing the arguments that we are going to submit for input in one case or another were
+# used as names.
+
+
+...
+class Pizza:
+    def __init__(self, ingredients: list, spicy_level: int):
+
+    @classmethod
+    def from_box(cls):
+
+    @classmethod
+    def from_bag(cls):
+...
+
+# Example №2
+# Context: In the presented implementation, an instance of the 'Symphony' class can either be manually set notes and
+# chords, or using popular formats in the form of a dictionary with information and music at a specific time,
+# or transmitted in tuple format via API.
+# Comments: As a solution to the problem, the factory method is used in the pythonic style, distinguishing
+# between different options.
+
+...
+class Symphony:
+    def __init__(self, chords: list, notes: list):
+
+    @classmethod
+    def from_dict(cls):
+
+    @classmethod
+    def from_tuple(cls):
+...
+
+# Example №3
+# Context: It is necessary to create stuffed creatures within the framework of a small game, you can try to make a
+# stuffed animal without reference to an animal, but if you want to use a ready-made animal object, you need to process
+# each caste of the animal world separately.
+# Comments: Since when assembling a stuffed animal it is necessary to process the attributes of creatures in different
+# ways, a functional was made using '@classmethod' which now allows you to apply the correct 'parsing' to the creature
+# in advance.
+
+...
+class Effigy:
+    def __init__(self, pose: int, size: int, wool: str, limbs: list[str]):
+
+    @classmethod
+    def from_mammal(cls):
+
+    @classmethod
+    def from_insect(cls):
+
+    @classmethod
+    def from_reptile(cls):
+...
+
+# 3.2 -----------------------------------------------------------------------------------------------------------------
+
+# Example №1
+# Context: The task of the problem was to design such a set of abstractions that would help to present the so-called
+# "thinking conscious machine" in more than one variation. For example, consciousness can arise both in silicone form
+# and in organic form, and although the devices of these systems will be completely different, they will still
+# perform the same functions.
+# Comments: As a solution, an informal python interface was developed, which in turn helps to create several
+# 'thinking machines' at once, which is why the name was given, because in essence it is a Factory pattern.
+
+...
+class BrainFactory:  # informal interface
+    def consciousness_origin(self, size: int, performance: int) -> None:
+        """Generate consciousness, from this moment the brain begins its 'life'."""
+        pass
+
+    def change_structure(self, scheme: list[list]) -> None:
+        """Change brain physical structure."""
+        pass
+
+class SilicoThinkingMachine(Brain):
+
+class OrganicThinkingMachine(Brain):
+...
