@@ -1,0 +1,208 @@
+# The current discussion will be devoted to constants and their role in the program and project. While writing the
+# program, it is important to understand which values should be made constants, because if necessary, you will need to
+# change the value only in one place, and not throughout the code. And this is not to mention how much clearer the code
+# will be without "magic numbers". It is also important to name constants differently if they have a different essence,
+# but the same value, for example, both are equal to 5. By the way, the values 0 and 1 can often be allowed to be used.
+# not as constants.
+
+# Example №1
+# Context: The constant in the example contains the bot telegram token, which is used to authorize the bot when
+# requesting the telegram API to work with bots.
+# Comments: Following the rules of naming constants, all the letters of the constant were converted to uppercase,
+# the name itself as a whole correctly reflects the essence of abstraction.
+
+# WAS
+...
+telegram_bot_token = "18423654403:KSKDFKkuasfafuohsdf"  # fake token
+...
+
+# BECAME
+...
+TELEGRAM_BOT_TOKEN: str = "18423654403:KSKDFKkuasfafuohsdf"  # fake token
+...
+
+# Example №2
+# Context: The constant given in the example contains the identifier of the Telegram chat in which the moderators of
+# the project consist.
+# Comments: The main edit that I am making here is the translation of letters into uppercase in accordance with the
+# rules for the design of constants.
+
+# WAS
+...
+moderators_chat_id = -635182071
+...
+
+# BECAME
+...
+MODERATORS_CHAT_ID: int = -635182071
+...
+
+# Example №3
+# Context: the presented constant contains the identifier of an English-language chat
+# (there is also a Russian-language one), which is a closed chat where people who have passed moderation are added.
+# Comments: In addition to the fact that I brought the constant into the proper form (uppercase),
+# I also slightly modified the name so that the constant better reflects the essence, especially considering that
+# using numbers in variables is undesirable practice.
+
+# WAS
+...
+vip_chat_num1 = -1001548750662
+...
+
+# BECAME
+...
+VIP_CHAT_EN: int = -1001548750662
+...
+
+# Example №4
+# Context: the presented variable contains the ID of the chat in which the main stakeholders of the project
+# (company local chat) consist.
+# Comments: As part of the program, it was decided to rename the name of the constant to a more concise name,
+# fitting in one word all those who are in the chat.
+
+# WAS
+...
+cf_bot_group_chat_id = -652708298
+...
+
+# BECAME
+...
+STAKEHOLDERS_CHAT_ID: int = -652708298
+...
+
+# Example №5
+# Context: The variable responsible for this identifier (in the telegram it is called chat_id) displays a unique
+# number that is assigned to the bot, by which it can be identified.
+# Comments: Given that the variable contains the word 'chat', it is quite a difficult task to make it clear to the
+# reader of the code that in this sense 'chat' is exclusively the term telegram. Therefore, it was decided to use the
+# merged spelling of the term 'CHATID', it would also be nice to add some decoding of the concept as a comment.
+
+# WAS
+...
+bot_telegram_id = 1848637403
+...
+
+# BECAME
+...
+BOT_CHATID: int = 1848637403
+...
+
+# Example №6
+# Context: The specified variable contains the basis for compiling a so-called deep link, into which additional
+# information can be encoded, and the user will not only go to the bot, but also, for example, the bot will find out
+# from which source the user came.
+# Comments: During the refactoring of the name, it was decided to give preference to the term "Interface" when
+# describing the essence of the variable, since the part of the link that the variable represents is in fact not
+# suitable by itself and requires the addition of a co-operative part.
+
+# WAS
+...
+bot_start_deep_link_base = "https://t.me/preTesting_bot?start="
+...
+
+# BECAME
+...
+BOT_DEEP_LINK_INTERFACE: str  = "https://t.me/preTesting_bot?start="
+...
+
+# Example №7
+# Context: During the calculation of the task in the light of aviation, the compilers of the task were given a
+# certain constant, which contained a certain standard deviation within the framework of the task that had
+# to be provided for.
+# Comments: Therefore, within the framework of the program, I renamed the value of the variable and using the word
+# 'standard' thereby showing that the variable is named about the deviation rather than about some fatal error.
+
+# WAS
+...
+error = 0.12
+...
+
+# BECAME
+...
+STANDART_ERROR: float = 0.12
+...
+
+# Example №8
+# Context: In the constant below, we encode the port on which the 'FiftyOne' application will run - an open source
+# toolkit that enables you to build better computer vision workflows by improving the quality of your datasets
+# and delivering insights about your models.
+# Comments: If this code is read by a person who does not know that 'FiftyOne' is just such an application, then he
+# will be confused why this constant is explained, so I added a little certainty to the name of the constant.
+
+# WAS
+...
+FIFTYONE_PORT: int = 5151
+...
+
+# BECAME
+...
+FIFTYONE_APP_PORT: int = 5151
+...
+
+# Example №9
+# Context: The constant given in the example is responsible for the path along which the logs and weights of the
+# machine learning model are stored.
+# Comments: The original name is not expressive and looking at it, you might think that it is not about the path for
+# temporary files, but about the temporary path, I have corrected this moment.
+
+# WAS
+...
+TMP_PATH: Path = Path('./tmp') / uuid4().hex
+...
+
+# BECAME
+...
+TMP_FILES_PATH: Path = Path('./tmp') / uuid4().hex
+...
+
+# Example №10
+# Context: In a small game, from which the example is taken, there is always a fixed number of cells of the playing
+# field, which never changes during the execution of the program.
+# Comments: Before refactoring, the number 100 was a 'magic number', so I entered a constant into the program
+# reflecting this value.
+
+# WAS
+...
+for cell in range(100):
+    cell.check_status()
+...
+
+# BECAME
+...
+NUM_GRID_CELLS = 100
+for cell in range(NUM_GRID_CELLS):
+    cell.check_status()
+...
+
+# Example №11
+# Context: During scraping, it is necessary to give the scraper the correct headers, previously in the script the
+# header was directly declared during the request.
+# Comments: However, since the same header is given to the scraper everywhere, which does not imply changes,
+# it was decided to make it a constant.
+
+# WAS
+...
+# the constant was not declared
+...
+
+# BECAME
+...
+HEADER: dict = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36'}
+...
+
+# Example №12
+# Context: Earlier in the course, the number 60 was explicitly specified as the number of seconds after which it
+# is necessary to request updates from the server.
+# Comments: Earlier in the course, the number 60 was explicitly specified as the number of seconds after which it
+# is necessary to request updates from the server.
+
+# WAS
+...
+# the constant was not declared
+...
+
+# BECAME
+...
+NOTIFICATION_CYCLE_DELAY = 60
+...
+
