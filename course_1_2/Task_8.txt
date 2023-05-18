@@ -203,6 +203,6 @@ HEADER: dict = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.3
 
 # BECAME
 ...
-NOTIFICATION_CYCLE_DELAY = 60
+NOTIFICATION_CYCLE_DELAY_SEC = 60
 ...
 
