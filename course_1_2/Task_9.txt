@@ -1,0 +1,223 @@
+# It's time to consider good code writing practices related to data types, it's not about annotations, but about
+# working with code types, for example, being vigilant about rounding float numbers, checking the integrity of
+# division operations for integers, and more.
+
+# Example №1
+# Context: In this section of the code for a self-written server, the condition is checked under which an active flag
+# is possible that the server is balanced (each user is given an equal amount of time) and there are no users connected.
+# In this case, we throw out an error.
+# Comments: In the primary implementation, a rather strange condition is used, which is quite short, but this worsens
+# the understanding of the code, especially considering that the condition compares the variable bool and int.
+# Based on this, the condition entry was changed.
+
+# WAS
+...
+if is_server_balanced > num_user:
+    raise Exception("error when balancing users: There are no users for balancing")
+...
+
+# BECAME
+...
+if is_server_balanced and num_user == 0:
+    raise Exception("error when balancing users: There are no users for balancing")
+...
+
+# Example №2
+# Context: The presented code calculates the ratio of the number of users who have left applications over the past
+# month to the number who have left for the current year.
+# Comments: Since it is possible that the variable 'cur_year_num_left_users' will be zero, we have added the
+# appropriate exception in advance.
+
+# WAS
+...
+left_users_ratio = last_month_num_left_users / cur_year_num_left_users
+...
+
+# BECAME
+...
+if cur_year_num_left_users == 0:
+    raise Exception("There is not enough data to calculate the parameter, cur_year_num_left_users is equal to zero")
+left_users_ratio = last_month_num_left_users / cur_year_num_left_users
+...
+
+# Example №3
+# Context: In this example, the case is presented when the client asked to calculate a certain metric, while there is
+# a high chance that an OverflowError will occur with the growth of the user base.
+# Comments: Since it is the float type that has an overflow problem in Python, it is when operating with this type
+# that you should be more careful when there is a possibility of a multiple increase in this number, by the way,
+# a similar problem with the int type will cause a problem already 'MemoryError'. In the example, we simply placed
+# a dangerous block in the 'try-except' construct, although of course it is better to follow more concise solutions
+# in production.
+
+# WAS
+...
+potential_user_interactions = 4.5 ** num_users
+...
+
+# BECAME
+...
+try:
+    potential_user_interactions = 4.5 ** num_users
+except OverflowError as e:
+    logging.exception(e)
+    return
+...
+
+# Example №4
+# Context: The current code clipping is a kind of attempt to implement a sharding mechanism for players,
+# at the end of the function we want to get the int number of servers that we will need.
+# Comments: The example uses int to convert the result to an integer format, but it would be wiser to
+# use integer division in place, since we avoid unnecessary type conversions after calculations.
+
+# WAS
+...
+servers_count = num_players / 10_000
+return int(servers_count)
+...
+
+# BECAME
+...
+servers_count = num_players // 10_000
+return servers_count
+...
+
+# Example №5
+# Context: The presented code belongs to a function that tries to predict the number of messages from a specific user.
+# Comments: Given that the 'magic' coefficient is a float number, at the same time we can losslessly convert it into
+# an int number and thereby clearly improving our code by removing unnecessary float values.
+
+# WAS
+...
+presumptive_num_user_messages = 3.0 * user_chat_id
+...
+
+# BECAME
+...
+presumptive_coeff = 3
+presumptive_num_user_messages = presumptive_coeff * user_chat_id
+...
+
+# Example №6
+# Context: These lines are a particular example of how sending messages to bot users works.
+# Comments: Since it is a good practice to develop a strategy for internationalizing/localizing text messages in your
+# code, all the phrases of the bot have been placed in a separate module in which they are distributed under the
+# appropriate languages, which will make it easy to implement new languages in the bot in the future.
+
+# WAS
+...
+bot.send_message(message.chat.id, "Hello user...", reply_markup=markup)
+...
+
+# BECAME
+...
+bot.send_message(message.chat.id, bot_phrases_dict[user_data["language"]["MAIN_MENU_GREETINGS_TEXT"], reply_markup=markup)
+...
+
+# Example №7
+# Context: The user has variability in terms of calling bot commands, one of these commands is '/start'.
+# Comments: To avoid 'magic' lines in the code, a constant was introduced that contained the command '/start'
+
+# WAS
+...
+elif message.text == "/start":
+...
+
+# BECAME
+...
+START_COMMAND: str = "/start"
+elif message.text == start_command:
+...
+
+# Example №8
+# Context: The current context presents us with a mechanism for sending a link to the user via a bot to a site where
+# he can check a court case (a fictitious link is used)
+# Comments:
+
+# WAS
+...
+bot.send_message(message.chat.id, "https://xyz.court.net/legitimacy/main.html", reply_markup=types.ReplyKeyboardRemove(selective=False))
+...
+
+# BECAME
+...
+COURT_CASE_INFO_LINK = "https://xyz.court.net/legitimacy/main.html"
+bot.send_message(message.chat.id, COURT_CASE_INFO_LINK, reply_markup=types.ReplyKeyboardRemove(selective=False))
+...
+
+# Example №9
+# Context: In this example, the inclusion of some elements in the dictionary is checked and the substring is checked.
+# Comments: Thanks to Boolean variables, we have the opportunity to shorten the code and make it more readable,
+# as if decomposing conditions into logical variables.
+
+# WAS
+...
+if 'issue_number' in case and 'organization' in case:
+    if case['issue_number'] in case['xin']
+...
+
+# BECAME
+...
+is_issue_info = 'issue_number' in case and 'organization' in case
+is_issue_authorized = case['issue_number'] in case['xin']
+if is_issue_info and is_issue_authorized:
+...
+
+# Example №10
+# Context: The example use the part of the code responsible for checking whether the reliability check of
+# the bot has been successfully completed and whether all the process members are ready to start working.
+# Comments: The conditions were placed in separate Boolean variables, which significantly increased readability.
+
+# WAS
+...
+reliadbility_status = check_the_reliability_of_the_credentials(user_iin, user_password)
+if reliadbility_status and True == user_status == operator_status:
+...
+
+# BECAME
+...
+is_members_ready = True == user_status == operator_status
+is_reliadbility_confirmed = check_the_reliability_of_the_credentials(user_iin, user_password)
+if is_reliadbility_confirmed and is_members_ready:
+...
+
+# Example №11
+# Context: Within the framework of the bot, deploy a decorator that helps to correctly handle any exceptions that
+# occur during operation.
+# Comments: Previously, the text was directly inserted as one of the arguments, but now this error text sent to
+# the user is placed in a separate constant.
+
+# WAS
+...
+bot.send_message(message.chat.id, "❌ An unexpected bot operation scenario has occurred, please follow the bot's instructions")
+function_to_which_to_flip(message, *args, **kwargs)
+...
+
+# BECAME
+...
+UNIVERSAL_BOT_ERROR_MESSAGE = "❌ An unexpected bot operation scenario has occurred, please follow the bot's instructions"
+bot.send_message(message.chat.id, UNIVERSAL_BOT_ERROR_MESSAGE)
+function_to_which_to_flip(message, *args, **kwargs)
+...
+
+# Example №12
+# Context: Within the framework of requests for court cases, there is usually no situation when only one court case can
+# come, since there is always an accompanying case, that is, logically there should always be at least two cases
+# or zero.
+# Comments: However, during practice, it was discovered that there are some incorrect cases in the system that
+# really come alone, so an exception was added for such cases.
+
+# WAS
+...
+for case_num in court_case_nums:
+    if case_num / (len(court_case_nums) - 1):
+...
+
+# BECAME
+...
+for case_num in court_case_nums:
+    if court_case_nums - 1 == 0:
+        raise Exception("court_case_nums - 1 is equal to zero")
+    if case_num / (len(court_case_nums) - 1):
+...
+
+
