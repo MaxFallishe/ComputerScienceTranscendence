@@ -1,0 +1,299 @@
+# The current file is dedicated to the rules of clear code for variables and their values, about how to initialize
+# variables correctly, how to work with variables in loops correctly, how to use invariants.
+
+# Example №1
+# Context: In this function, we use the counter 'iterating_date' to try to make a while loop while the statement
+# in the construction is true.
+# Comments: The error in this entry was due to the fact that the variable 'iterating_date' was declared almost at
+# the very beginning of the module, which is bad practice. The solution is to move the line with the initialization of
+# this variable close to the beginning. So it is much easier to understand that this variable is a counter for the
+# underlying loop.
+
+# WAS
+...
+iterating_date = general_min_date
+# a lot of code between
+while iterating_date <= general_max_date:
+...
+
+# BECAME
+...
+iterating_date = general_min_date
+while iterating_date <= general_max_date:
+...
+
+# Example №2
+# Context: In this case, we declare before the start of the cycle lists in which we will save some received
+# values - dates.
+# Comments: The problem here is that initially these lists were announced at the beginning of the module, and it was
+# not very clear what exactly these lists and their purpose relate to. As a result, we moved their declaration closer
+# to the cycle and added typehints.
+
+# WAS
+...
+success_sessions_dates = []
+failed_sessions_dates = []
+# a lot of code between
+while iterating_date <= general_max_date:
+...
+
+# BECAME
+...
+success_sessions_dates: list[Optional[str]] = []
+failed_sessions_dates: list[Optional[str]] = []
+while iterating_date <= general_max_date:
+...
+
+# Example №3
+# Context: In the code below, the made 'url' is used to store a specific base substring of the request that is
+# then executed in the code.
+# Comments: In addition to the fact that the variable's name has been changed so that it reflects the entity more
+# succinctly, the variable is now a constant due to the fact that the entity itself that it contains does not imply
+# that this entity should be changed.
+
+# WAS
+...
+url = "http://10.1.0.1:999/sk-cases"  # fictitious address
+...
+
+# BECAME
+...
+COURT_CASE_REQ_HEAD = "http://10.1.0.1:999/sk-cases/"  # fictitious address
+...
+
+# Example №4
+# Context: In this example, a variable containing the current time (number of seconds since the beginning of the epoch)
+# is declared at the very beginning of the function.
+# Comments: Since there is no need for the 'current_timestamp' variable anywhere except when forming a tuple, it is
+# reasonable to transfer this variable to this particular tuple. The conversion format has also been changed
+from 'round' to 'int'.
+
+# WAS
+...
+current_timestamp: int = round(time.time())
+# a lot of code between
+user_review: tuple = (message.from_user.id, comment, current_timestamp)
+...
+
+# BECAME
+...
+current_timestamp: int = int(time.time())
+user_review: tuple = (message.from_user.id, comment, current_timestamp)
+...
+
+# Example №5
+# Context: In this code, we are trying to iterate on cases from the list with cases.
+# Comments: Since the 'chunk_counter' variable is used exclusively to end the loop at the right moment - in fact,
+# it's just a counter, it would be more correct to use the counter declaration inside the for loop.
+
+# WAS
+...
+chunk_counter = 0
+for case in cases:
+...
+
+# BECAME
+...
+for i in range(len(cases)):
+...
+
+# Example №6
+# Context: Here we consider the code responsible for sending notifications to users of telegram bot.
+# Comments: Since we are sure that if the object type is 'CourtNotifications' then it will definitely be suitable for
+# processing - we just have to check the object sent by the broker for this characteristic, it turns out some
+# kind of implementation of the invariant.
+
+# WAS
+...
+notifications = broker.get_accumulated_notifications()
+for notification in notifications_to_send:
+...
+
+# BECAME
+...
+notifications = broker.get_accumulated_notifications()
+if type(notifications) is not CourtNotifications:
+    raise TypeError('The messages received from the broker are not all CourtNotifications objects')
+for notification in notifications_to_send:
+...
+
+# Example №7
+# Context: In the given code block, the process of detecting (counting) errors in the logging files takes place.
+# Аfter that, there is another loop of error detection.
+# Comments: Earlier in the code, the author forgot to reset the error accumulator, and therefore, if the second loop
+# was started, he also counted the past detected errors, this code flaw was removed.
+
+# WAS
+...
+err_counter = 0
+for log_file in logs_file:
+    ...
+...
+
+# BECAME
+...
+err_counter = 0
+for log_file in logs_file:
+    ...
+err_counter = 0
+...
+
+# Example №8
+# Context: The example below shows the variable 'num_users' which is declared at the very beginning of the module
+# and initially equals zero.
+# Comments: However, if you look carefully at the context in which the variable is located, you can understand that it
+# is declared in the wrong place, and it should be declared where it is assigned a value.
+
+# WAS
+...
+num_users = 0
+...
+
+# BECAME
+...
+num_users = len(users)
+...
+
+# Example №9
+# Context: In the example below there is a code that allows insertion into the Excel table, the variables 'column_num'
+# and 'row_num' are a kind of counters for the while loop
+# Comments: To bring the code to its best appearance, the two counters 'column_num' and 'row_num' were moved to the
+# immediate vicinity of the loop, that is, to the moment when they begin to be used.
+
+# WAS
+...
+row_num = 2
+column_num = 1
+# a lot of code between
+while ws.cell(row=row_num, column=column_num).value:
+...
+
+# BECAME
+...
+row_num = 2
+column_num = 1
+while ws.cell(row=row_num, column=column_num).value:
+...
+
+# Example №10
+# Context: The example below shows an example of the implementation of the human "disease" mechanism
+# through the interaction of two classes - Human and Disease.
+# Comments: For some reason, the 'disease' attribute was declared only in a special function, and not in the
+# constructor of the Human class, which is bad practice - this has been fixed and now the 'disease' attribute is
+# declared immediately in the constructor, just now equals None.
+
+# WAS
+...
+def become_ill(self, disease: Disease):
+    self.disease = disease
+...
+
+# BECAME
+...
+class Human:
+    def __init__(self):
+        ...
+        self.disease = None
+
+def become_ill(self, disease: Disease):
+    self.disease = disease
+...
+
+# Example №11
+# Context: In the example below, an operation is performed to filter out the necessary bookings, namely bookings for
+# the last month.
+# Comments: The first 'empty' initialization of the list is absolutely not necessary in the context of the task,
+# all you need to do is assign a value at the time of the first declaration of the variable, and type hints have also been added for a more detailed description of the filling of the list.
+
+# WAS
+...
+last_month_bookings = []
+last_month_bookings = Booking.objects.filter(checkin_date__gte=last_month)
+...
+
+# BECAME
+...
+last_month_bookings: list[Booking] = Booking.objects.filter(checkin_date__gte=last_month)
+...
+
+# Example №12
+# Context: Below is the code of the Shed class method that discharge a cars that has been repaired and has the
+# appropriate status.
+# Comments: However, there may be a situation when there are no machines in the class as a whole, so here we will
+# check for the presence of an important variable (invariant) of the machine, and if there are none, we will issue an error/warning.
+
+# WAS
+...
+discharge_cars(self):
+    ...
+...
+
+# BECAME
+...
+discharge_cars(self):
+    if not self.cars:
+    ...
+...
+
+# Example №13
+# Context: In the code below you can see the process of calculating the grill temperature in Celsius based on the
+# number of turns of the grill handle
+# Comments: Within the framework of the presented functionality, it makes no sense to declare the variable
+# 'grill_temp_cels' in advance, since you can immediately initialize it based on how much the grill handle is turned.
+
+# WAS
+...
+grill_temp_cels = 0
+# a lot of code between
+grill_grip_turnover_temp_up_cels = 50
+grill_temp_cels = num_turnover * grill_grip_turnover_temp_up_cels
+...
+
+# BECAME
+...
+grill_grip_turnover_temp_up_cels = 50
+grill_temp_cels = num_turnover * grill_grip_turnover_temp_up_cels
+...
+
+# Example №14
+# Context: In the presented function (which belongs to the self-written server class), the user's http request
+# is processed.
+# Comments: In this case, the only allowed type of header that our server accepts is written to the variable
+# 'allowed_header_type', but since we do not change this variable in any way in the future, and it is inherently a
+# constant, then orthographically it is worth making it a constant.
+
+# WAS
+...
+def handle_get_users(self, req):
+    allowed_header_type = 'text/html; charset=utf-8'
+...
+
+# BECAME
+...
+def handle_get_users(self, req):
+    ALLOWED_HEADER_TYPE = 'text/html; charset=utf-8'
+...
+
+# Example №15
+# Context: In the presented segment, the assignment of some parameters of the industrial machine is realized,
+# which the user enters manually.
+# Comments: In the original version, as recommended in some style recommendations, it is proposed to put all
+# definitions of variables with their initial initialization at the beginning of the block - variables were placed at
+# the beginning of the block with dummy values. However, since this approach is more likely to lead to errors, and most
+# importantly, it contradicts the fundamental scientific principles of building reliable programs, it was decided to
+# refactor the code and assign values only at the time of user input.
+
+# WAS
+...
+machine_size = 0
+machine_type = None
+# a lot of code between
+machine_size = int(input("Enter the machine size"))
+machine_type = input("Enter the machine type 'ARTICLE NUMBER'")
+...
+
+# BECAME
+...
+machine_size = int(input("Enter the machine size"))
+machine_type = input("Enter the machine type 'ARTICLE NUMBER'")
+...
