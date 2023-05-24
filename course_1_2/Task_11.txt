@@ -1,0 +1,378 @@
+# Now I would like to analyze such a feature when writing code as the lifetime of variables, a concept that is
+# extremely important within the clarity of the code that you write and how convenient it will be to transform it in
+# the future. Here I will analyze such things as - minimizing the scope of a variable and grouping related commands.
+
+# Example №1
+# Context: In the given example, you can see a function that performs the role of a data generator for further
+# transmission to the frontend side in a certain format.
+# Comments: One of the main problems of this function is its size, it takes up more than 300 lines of code and at the
+# same time contains a variety of functionality. Also, there are very large windows between the uses of the
+# 'chart_data' variable. Therefore, I decided to decompose this function into a class, where the current functionality
+# of the function will be reassigned to the public method of the class - this will narrow the scope of not only the
+# 'chart_data' variable, but also the rest. Also, the names of entities were edited in the final version.
+
+# WAS
+...
+def get_data_for_chart(user_id):
+    chart_data = {}
+    # a lot of code between
+    chart_data["sessions"]["points"] = zero_tg_bot_sessions_points
+    return chart_data
+...
+
+# BECAME
+...
+court_appeals = CourtAppeals(court_id=auth_court.id)
+court_appeals.upload_appeals(start_date=None, end_date=None)
+...
+
+# Example №2
+# Context: the presented line is a variable that is simply located in one of the Python scripts and stores the largest
+# unique identifier of the court (the larger the identifier, the newer the court, the less likely it is that an
+# operator has been assigned to it).
+# Comments: As part of the initial refactoring, it was decided to put this variable in the function format, thereby
+# reducing its scope and making it possible to directly access this variable in the future
+# (for example, when it changes).
+
+# WAS
+...
+max_operator_assigned_court_id = make_query("SELECT max(assigned_court_id) FROM operators")[0][0]
+...
+
+# BECAME
+...
+def get_last_court_with_operator() -> Court:
+...
+
+# Example №3
+# Context: Here we can see the code that in the next Python script compiles a list of dictionaries with information
+# about ships that are in the scope of the module.
+# Comments: As an improvement of this code, it was decided to make this functionality into a separate function,
+# generalizing it a little so that now you can get not only some attributes, but whole objects from which we can
+# already get any attributes that only exist.
+
+# WAS
+...
+all_courts_id = make_query("SELECT id, level, name from courts")
+all_courts_id = [{"id": tup[0], "level": tup[1], "name": tup[2]} for tup in all_courts_id if tup[0] > max_operator_assigned_court_id]
+...
+
+# BECAME
+...
+def get_all_courts() -> list[Court]:
+...
+
+# Example №4
+# Context: The presented code snippet is taken from a module that contains functionality for generating passwords.
+# Comments: In the example presented, the variables 'gen_password_min_len' and 'gen_password_max_len' are clearly
+# superfluous, since they pointlessly expand the scope of variables that, by the judge, are only attributes of
+# the 'PasswordGenerator()' class.
+
+# WAS
+...
+gen_password_max_len = 8
+gen_password_min_len = 8
+for i in range(num_passwords_to_gen):
+    pwo = PasswordGenerator()
+    pwo.minlen = gen_password_max_len
+    pwo.maxlen = gen_password_min_len
+...
+
+# BECAME
+...
+for i in range(num_passwords_to_gen):
+    p_gen = PasswordGenerator()
+    p_gen.minlen = 8
+    p_gen.maxlen = 8
+...
+
+# Example №5
+# Context: The example below shows an example of how database queries are implemented in one of the projects.
+# Comments: And absolutely for each request it is necessary to write these 5 lines, taking into account the fact that
+# of course it is better to switch to ORM in the project, one of the solutions is to create a special function that
+# will help save lines in the code, while working correctly with both reading and writing data.
+
+# WAS
+...
+conn = sqlite3.connect('database/db')
+cursor = conn.cursor()
+cursor.execute("some query in db")
+conn.commit()
+conn.close()
+...
+
+# BECAME
+...
+from exemplars.sql_query_to_db import make_query
+make_query("some query in db")
+...
+
+# Example №6
+# Context: The lines given in the example are taken from a program that works with Excel sheets.
+# Comments: In this case, the variable 'number_list_sheetnames' was declared at the very beginning of the function,
+# given that it was not changed in any way and was not used until the value was returned. The correct solution here
+# is to place this variable as close as possible to the block of code in which it is used. The name of the variable
+# was also slightly modified.
+
+# WAS
+...
+number_list_sheetnames = 0
+# a lot of code between
+return wb[wb.sheetnames[number_list_sheetnames]]
+...
+
+# BECAME
+...
+num_row_sheetnames = 0
+return wb[wb.sheetnames[num_row_sheetnames]]
+...
+
+# Example №7
+# Context: here we can observe the section of code responsible for opening the file using 'os.startfile' and logging
+# of this process.
+# Comments: Despite the large number of stylistic errors, here we will focus on the fact that it is possible to group
+# the variable 'basename' by minimizing the 'windows' between uses, which will have a short impact on readability.
+
+# WAS
+...
+basename = os.path.basename(filename)  # <-- basename variable
+shutil.copy(filename, COPY_DIR_FILE)
+copy_filename = COPY_DIR_FILE + '\\' + basename  # <-- basename variable
+os.startfile(copy_filename)
+data = datetime.datetime.today().strftime("%Y/%m/%d %H:%M:%S")
+reading_writing_txt.event_log_txt(data, basename)  # <-- basename variable
+...
+
+# BECAME
+...
+shutil.copy(filename, COPY_DIR_FILE)
+data = datetime.datetime.today().strftime("%Y/%m/%d %H:%M:%S")
+basename = os.path.basename(filename)  # <-- basename variable
+copy_filename = COPY_DIR_FILE + '\\' + basename  # <-- basename variable
+reading_writing_txt.event_log_txt(data, basename)  # <-- basename variable
+os.startfile(copy_filename)
+...
+
+# Example №8
+# Context: In this function, we are generating a reference to the exported object.
+# Comments: Mainly here we are trying to move the lines where the 'export_types' variable is mentioned to each other.
+# In addition, we changed the type from a set to a list for the sake of predictability of iterations over this
+# complex data structure.
+
+# WAS
+...
+types = {'image/jpeg', 'image/png'}
+def get_links(client_id):
+    # a lot of code between
+    return [item['link'] for item in data['data'] if 'type' in item and item['type'] in types]
+...
+
+# BECAME
+...
+def get_client_items_links(client_id: int):
+    # a lot of code between
+    export_types: list[str] = ['image/jpeg', 'image/png']
+    return [item['link'] for item in data['data'] if 'type' in item and item['type'] in export_types]
+...
+
+# Example №9
+# Context: Here we can see a few initial lines of the function - the purpose of which is to edit the file that is
+# submitted to the input.
+# Comments: Despite the fact that here, in general, it is necessary to replace the Prints with Logging using the
+# 'logging' module, within the framework of the errors we are considering, we can also find that the initialization of
+# the variable occurs pointlessly far from the place of its indirect use, as a solution we group these lines.
+
+# WAS
+...
+def xdump(filename: str, blocksize: bytes, encoding: str, decimal: bytes) -> None:
+    encoding_text = f'{encoding.upper()} characters'  # <-- changing position of this line
+    width = (blocksize * 2) + (blocksize // 4)
+    if blocksize % 4:
+        width += 1
+    print('Block     Bytes {0:{1}} {2}'.format('', (width - 5), encoding_text))
+    print('-------- {0}   {1}'.format('-' * (width - 1), '-' * max(len(encoding_text), blocksize)))
+...
+
+# BECAME
+...
+def xdump(filename: str, blocksize: bytes, encoding: str, decimal: bytes) -> None:
+    width = (blocksize * 2) + (blocksize // 4)
+    if blocksize % 4:
+        width += 1
+    encoding_text = f'{encoding.upper()} characters'  # <-- changing position of this line
+    print('Block     Bytes {0:{1}} {2}'.format('', (width - 5), encoding_text))
+    print('-------- {0}   {1}'.format('-' * (width - 1), '-' * max(len(encoding_text), blocksize)))
+...
+
+# Example №10
+# Context: In this example, we can observe the implementation of configuration settings in the 'Client' class.
+# Comments: In the current example, again, you can notice that the functionality referring to the same
+# function is unfairly scattered throughout the body of the function, despite the fact that it is possible even
+# without rewriting the functionality to compose strings with reference to a variable.
+
+# WAS
+...
+configuration = swagger_client.Configuration()
+# a lot of code between
+configuration.api_key["api_key"] = api_key
+if test_host:
+    configuration.host = test_host
+...
+
+# BECAME
+...
+configuration = swagger_client.Configuration()
+configuration.api_key["api_key"] = api_key
+if test_host:
+    configuration.host = test_host
+...
+
+# Example №11
+# Context: The code example below uses strings from an algorithm that takes an array and moves all zeros to the end,
+# preserving the order of the remaining elements.
+# Comments: By using a slightly different approach to solving the problem, we got rid of the loop and were able to
+# group all the available variables more clearly and impulsively.
+
+# WAS
+...
+def move_zeros(s):
+    list_new = []
+    list_0 = []
+    for s1 in s:
+        if s1 == 0:
+            list_0.append(0)
+        else:
+            list_new.append(s1)
+    for s0 in list_0:
+        list_new.append(s0)
+    return list_new
+...
+
+# BECAME
+...
+def move_zeros(s):
+    num_items = len(s)
+    s_without_zeros = [item for item in s if item != 0]
+    num_zeros = num_items - len(s_without_zeros)
+    s_with_zeros_in_the_end = s_without_zeros + [0] * num_zeros
+    return s_with_zeros_in_the_end
+...
+
+# Example №12
+# Context: These strings are taken from the method of the 'App' class responsible for working with the header.
+# Comments: In this case, by changing the condition into a more compact structure, we were able to put together
+# all the lines that perform operations with the variable 'header'.
+
+# WAS
+...
+header = {    # <-- header variable
+    "authsignature": appsignature,
+    "User-Agent": 'SilaSDK-python/0.2.48'
+}
+if content_type is not None and content_type == 'multipart/form-data':
+    pass
+else:
+    header["Content-Type"]: 'application/json' if content_type is None else content_type  # <-- header variable
+if key is not None and len(key.strip()) > 0:
+    header["usersignature"] = EthWallet.signMessage(msg, key.lower())  # <-- header variable
+if business_key is not None and len(business_key.strip()) > 0:
+    header["businesssignature"] = EthWallet.signMessage(  # <-- header variable
+        msg, business_key.lower())
+return header  # <-- header variable
+...
+
+# BECAME
+...
+header = {  # <-- header variable
+    "authsignature": appsignature,
+    "User-Agent": 'SilaSDK-python/0.2.48'
+}
+if content_type is None and content_type != 'multipart/form-data':
+    header["Content-Type"]: 'application/json' if content_type is None else content_type  # <-- header variable
+if key is not None and len(key.strip()) > 0:
+    header["usersignature"] = EthWallet.signMessage(msg, key.lower())  # <-- header variable
+if business_key is not None and len(business_key.strip()) > 0:
+    header["businesssignature"] = EthWallet.signMessage(  # <-- header variable
+        msg, business_key.lower())
+return header  # <-- header variable
+...
+
+# Example №13
+# Context: This code is taken from the function that is responsible for registering a new key for further
+# transmission to the user.
+# Comments: In this example, it is possible to achieve a denser grouping of variables, in particular the variable
+# 'path_to_sub_key' by removing excessive initialization of the buel variable, also in this case we give a slight
+# advantage when grouping the variable 'path_to_sub_key' before the variable 'hki_constant' because the variable
+# 'path_to_sub_key' the most local, which means it is more profitable to show as clearly as possible that all work
+# with this variable fits into the current two consecutive lines.
+
+# WAS
+...
+path_to_sub_key: str = search(f"(?<={hkey_folder}\\\).*", registry_path)[0]
+hkey_constant: int = getattr(winreg, hkey_folder)
+opened_key = False
+opened_key = winreg.OpenKeyEx(hkey_constant, path_to_sub_key, access=winreg.KEY_WRITE)
+logging.debug(f"Successfully opened: {registry_path}")
+...
+
+# BECAME
+...
+hkey_constant: int = getattr(winreg, hkey_folder)
+path_to_sub_key: str = search(f"(?<={hkey_folder}\\\).*", registry_path)[0]
+opened_key = winreg.OpenKeyEx(hkey_constant, path_to_sub_key, access=winreg.KEY_WRITE)
+logging.debug(f"Successfully opened: {registry_path}")
+...
+
+# Example №14
+# Context: In this example, the code from the script that automates the mailing list is used.
+# Comments: The main edit that we are making here regarding the topic of this analysis is narrowing the scope of the
+# variable - and considering that the variable 'ip' is used only in this function, it makes no sense to put it in the global space.
+
+# WAS
+...
+def SendMail():
+    content = ip
+    mail = smtplib.SMTP('smtp.yandex.ru', 587)
+    mail.ehlo()
+
+ip = open('new_ip.txt', 'r').readline().strip()
+...
+
+# BECAME
+...
+def SendMail():
+    ip = open('new_ip.txt', 'r').readline().strip()
+    mail = smtplib.SMTP('smtp.yandex.ru', 587)
+    mail.ehlo()
+...
+
+# Example №15
+# Context: Function below generates audio frames from PCM audio data. Takes the desired frame duration in milliseconds,
+# the PCM data, and the sample rate. Yields Frames of the requested duration.
+# Comments: In this example, a small edit was made at first glance - now the variable n is more grouped in the code,
+# but in practice this will help to better understand the code and not keep in mind all the 'windows' during which a
+# change may occur in the variable n (in this example).
+
+# WAS
+...
+n = int(sample_rate * (frame_duration_ms / 1000.0) * 2)
+offset = 0
+timestamp = 0.0
+duration = (float(n) / sample_rate) / 2.0
+while offset + n <= len(audio):
+    yield Frame(audio[offset:offset + n], timestamp, duration)
+    timestamp += duration
+    offset += n
+...
+
+# BECAME
+...
+offset = 0
+timestamp = 0.0
+n = int(sample_rate * (frame_duration_ms / 1000.0) * 2)
+duration = (float(n) / sample_rate) / 2.0
+while offset + n <= len(audio):
+    yield Frame(audio[offset:offset + n], timestamp, duration)
+    timestamp += duration
+    offset += n
+...
