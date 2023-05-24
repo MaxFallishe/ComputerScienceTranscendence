@@ -351,7 +351,7 @@ def SendMail():
 # the PCM data, and the sample rate. Yields Frames of the requested duration.
 # Comments: In this example, a small edit was made at first glance - now the variable n is more grouped in the code,
 # but in practice this will help to better understand the code and not keep in mind all the 'windows' during which a
-# change may occur in the variable n (in this example).
+# change may occur in the variable ('n' in this example).
 
 # WAS
 ...
