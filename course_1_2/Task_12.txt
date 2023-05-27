@@ -1,0 +1,75 @@
+# It's time to touch on such a topic as binding time - the moment when a variable and its value are linked together.
+# This aspect directly affects the flexibility and complexity of the program. Below I will give some examples of how
+# I chose the linking time in projects and explain each example.
+
+# Example №1
+# Context: This example is taken from one of my projects in which I needed to implement a Telegram bot for a company
+# client. In the section with the code, there is an excerpt of code showing the dictionary - how the bot's phrases were
+# stored for some user action; and an example of how I called these phrases in the code.
+# Comments: In this example, we can see a relatively early level of binding, namely at the interpretation level,
+# since the values are essentially constants loaded from a neighboring Python module. Why this particular model was
+# chosen, it was done as according to the project concept, frequent text editing was not planned in the bot
+# (more like format of large number of one-time edits), however, a visual and understandable multilingual type of data
+# was important, according to which the Junior specialist himself will be able to make a certain list of edits.
+# Presented of course does not allow you to be able to update the text in it instantly without restarting the bot,
+# however, it allows the bot to quickly get the desired text and at the same time not load the database with a huge
+# number of queries.
+
+# CODE EXAMPLE
+...
+bot_phrases_dict = \
+    {
+        "GENERAL":
+            {
+                "LANGUAGE_SELECTION_REQUEST": "Some unique text in universal form",
+                ...
+            },
+        "EN":
+            {
+                "CHOICE_REGIONAL_OFFICE": "Some unique text in engish",
+                ...
+            }
+        "EN":
+            {
+                "CHOICE_REGIONAL_OFFICE": "Some unique text in french",
+                ...
+            }
+
+bot.send_message(message.chat.id, bot_phrases_dict[user_data["language"]]['CHOICE_REGIONAL_OFFICE'])
+...
+
+# Example №2
+# Context: In this example, an example code is taken from a project where a desktop application was created that
+# allowed you to automatically download certain transactions from a certain site.
+# Comments: In the described case, a late binding time was chosen (At the pre-launch stage of the program functionality)
+# - mainly due to the fact that the customer had a large number of managers, each of whom needed their own settings for
+# the parser. In this case, it was irrelevant to invent a separate interface with all the settings - it would be a long
+# time, and the number of potential bugs also increased. However, when all the settings were in a txt file, it was easy
+# to change the parameters and transfer them, which is most important. This solution is especially relevant, since a
+# ready-made .exe file with the program was transferred to the customer.
+
+# CODE EXAMPLE
+...
+deals_parser = Parser
+deals_parser.read_options_txt("path/to/file/with/pathlib")
+...
+
+# Example №3
+# Context: In the underlying code block, you can observe a fragment that is responsible for sending reports to
+# Telegram Chat.
+# Comments: In this case, we have binding at the constant level - quite earlier, however, in this example, this
+# approach fully justifies itself by the fact that it is quite convenient for the developer to see how the check is
+# carried out and which value is the reference. Also, considering that this time is used in the code more than once,
+# it is very convenient to flexibly change this setting.
+
+# CODE EXAMPLE
+...
+REPORTS_PUBLICATION_TIME: str = "06-00"  # %H-%M
+
+def send_daily_reports_toDatetime _admin_chat() -> None:
+    current_time: str = datetime.datetime.now().strftime('%H-%M')
+    if current_time == REPORTS_PUBLICATION_TIME:
+        stat_command(analysing_time=current_time)
+...
+
+
