@@ -1,0 +1,106 @@
+# It's time to give some examples of how to work correctly with arrays, and to be more specific,
+# with lists (within Python). However, here I would like to consider a certain counterintuitive point - namely, before
+# using the list, to evaluate the possibility of using a different data structure without RANDOM access to the array,
+# or to avoid working with the list through RANDOM indexing. The main reason is this: the arguments for this are very
+# serious: random access to an array is similar in terms of bad style to "random" goto operators scattered in the code.
+# Their use leads to sloppy and error-prone code, the correctness of which is difficult to be sure.
+
+# Example №1
+# Context: In this example, conversion operations are performed on the list items to bring them to the desired form
+# for sending to the frontend.
+# Comments: In this case, you can observe how in some situations to abandon the use of Random Access to array elements,
+# but not replace it with another data structure. For example, you can see that we also perform some actions with the
+# elements of the list, but we do it sequentially, and not using indexes.
+
+# WAS
+...
+court_failed_sessions = [datetime.fromtimestamp(i[0]).date() for i in court_failed_sessions]
+for i in range(len(court_failed_sessions)):
+    # some complex actions with each element
+...
+
+# BECAME
+...
+court_failed_sessions_dates: list = [datetime.fromtimestamp(i[0]).date() for i in court_failed_sessions]
+for date in court_failed_sessions_dates:
+    # some complex actions with each element
+...
+
+# Example №2
+# Context: Here, as an example, is a line from one project initializing a certain message broker model.
+# Comments: As we can see in this situation, an attempt is initially made to implement a message broker using a regular
+# list, however, if we look deep into the meaning of the message broker, we will understand that in this case the queue
+# data structure that we implement from deque() is much more suitable.
+
+# WAS
+...
+message_broker: list = []
+...
+
+# BECAME
+...
+message_broker: deque = deque()
+...
+
+# Example №3
+# Context: In this example, you can see some kind of implementation of the "strong poison" event, which knocks the
+# player down completely with every tick, it doesn't matter if there is armor or other protection on the point.
+# Comments: If you look closely at the original mechanics, you can see how when health is taken away, the main
+# guideline goes to indexing the array, while the corrected version uses a more suitable pop method without
+# directly specifying the number of the array element.
+
+# WAS
+...
+for i in range(len(player.health_points), 0, -1):
+    del player.health_points[i]
+    game.tick()
+...
+
+# BECAME
+...
+for i in range(len(player.health_points)):
+    player.health_points.pop()
+    game.tick()
+...
+
+# Example №4
+# Context: The session_statuses list stores all statuses that occurred during the user request session, in particular,
+# these are transfers of the user to a "higher" level of the institution.
+# Comments: since it is important to monitor the correctness of processes with different communication
+# channels/instances during the execution of the program, the most appropriate data structure here will be a stack,
+# since at the end you just need to check the checksum of transitions - so here we will replace the list with a
+# stack using Python deque.
+
+# WAS
+...
+session_statuses = []
+session_statuses.append("Initialization")
+...
+
+# BECAME
+...
+from collections import deque
+session_statuses = deque()
+session_statuses.append("Initialization")
+...
+
+# Example №5
+# Context: In the code fragment under review, some local shade is added to the user's general collection of colors that
+# he will see in the background of the game for the longest time.
+# Comments: Using 'enumerate()' is a good practice, however, in this case we have the possibility to completely abandon
+# the use of list indexes, so one "shade" value will be enough for both program logic and logging, it is important to
+# note that in this case the solution is correct because there is no need to use an index in the loop.
+
+# WAS
+...
+for i, shade in enumerate(palette):
+    full_colors += palette[i]
+    logging.info(f"{shade} added to full_colors")
+...
+
+# BECAME
+...
+for shade in palette:
+    full_colors += shade
+    logging.info(f"{shade} added to full_colors")
+...
