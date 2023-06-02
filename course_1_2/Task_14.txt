@@ -1,0 +1,268 @@
+# 3.1 -----------------------------------------------------------------------------------------------------------------
+# Comments in code are an extremely important and ambiguous topic when writing code - it can be difficult to understand
+# them when to use them and when not. The following couple of sentences, I believe, will reveal the main points of this
+# topic: Nothing helps like a relevant comment; Nothing clutters up the code like a meaningless and unappreciative
+# comment; Nothing does as much harm as an old, outdated comment spreading lies and misinformation.
+# The best strategy is to try to write code so that comments are not required at all.
+# In this section I will show examples of when comments are really appropriate.
+
+# Example №1
+# Context: In the example, you can see a snippet of code that redirects the user to the corresponding module when
+# clicking on the button in the bot.
+# Comments: Since there is already a certain message storage system in this international project, pressing the button
+# in the code is checked more generically, and the text itself is placed in a separate module - it can be difficult to
+# correlate the specific name of the button with its definition in the system, in particular due to the fact that the
+# code contains not button names, but collections, the so-called 'keyboards' . Therefore, at this stage of application
+# development, it is easier to make such small callouts on which you can duplicate the specific text of the button.
+
+# CODE EXAMPLE
+...
+# If the user clicked on the button 'News'
+if message.text == bot_buttons_phrases_dict[user_data["language"]]["telegram_chanel_of_court_submenu_buttons"][0]:
+    court_tg_chanel_news(message, user_data)
+...
+
+
+# Example №2
+# Context: In this case, the functions need to work with certain specific terms, for example, in this example,
+# terms such as IIN and BIN as 'xin' field.
+# Comments: In the current situation, it can be imagined that a new developer, when parsing the code independently,
+# may not immediately understand the terms, so it's a good idea to explain a little and give a link to the
+# documentation where the specific terminology is explained.
+
+# CODE EXAMPLE
+...
+# "xin" mean IIN or BIN - see the documentation (<link>)
+def check_the_reliability_of_the_credentials(xin: str, password: str) -> bool:
+...
+
+
+# Example №3
+# Context: In this example, you can observe a function that collects certain hidden information from the user
+# authorization page of some site. (In particular, since the customer's service does not have an API.)
+# Comments: Since in this function there is no banal interaction with a fairly old authentication method on the site,
+# you have to take a comprehensive approach to obtaining all the necessary 'keys', so the comments tell the main
+# things and why they are needed, in addition, of course, a link to the documentation is given, as a difficult
+# moment to understand.
+
+# CODE EXAMPLE
+...
+# jsession is a session id that contains in cookies, issued to the user when he visits https://some.site.com url - see the documentation (<link>)
+# view_state_value is a value generated during get requests for the parameter "javax.faces.ViewState" for further post requests  - see the documentation (<link>)
+def get_jsession_and_viewstate_values() -> Tuple[str, str]:
+    // some code
+    view_state_value = soup.find(id="j_id1:javax.faces.ViewState:0")["value"]
+    cookies_dict = session.cookies.get_dict()
+    jsession_value = cookies_dict["JSESSIONID"]
+    return jsession_value, view_state_value
+...
+
+
+# Example №4
+# Context: This example shows part of the python module structure, which is used to store text in different
+# languages using python dictionaries.
+# Comments: In this context, it may not be very convenient when editing text, since the programmer will not be able to
+# understand which phrases are within the same module or are common. And although it is possible to expand the
+# systematization of phrases within the framework of the project, this will lead to a lengthening of queries to get
+# the right phrase. Therefore, in order to maintain a balance, the module blocks were divided into generalizing groups,
+# which makes it more convenient to view records.
+
+# CODE EXAMPLE
+...
+# Bot phrases for the module entry_point_module
+'choice_regional_office': "// some text",
+'choice_district_office': "// some text",
+'incorrect_user_input_as_desired_regional_office': "// some text",
+# Bot phrases for the another module
+...
+
+
+# Example №5
+# Context: In the example below you can see an example of a comment regarding the incorrect functioning of the external
+# xml API within the framework of requests.
+# Comments: Here the comment is left so that the reader can understand the code that may seem useless, and a link is
+# also given to the documentation, where this problem is described more broadly.
+
+# CODE EXAMPLE
+...
+# The crutch to circumvent the ban on long requests from the server to the judicial system.
+# The internal service should definitely fix this error, and this crutch should be removed from the current code.
+# - see the documentation (<link>)
+chunk_counter = 0
+...
+
+
+# Example №6
+# Context: In this case, the code from Jupiter is presented, which contains a pipeline for processing the vendor's json
+# files so that analysts can have a certain baseline.
+# Comments: Based on the fact that this 'notebook' contains several baselines - to specify the most productive one and
+# make a small sammari in the code is not a bad idea.
+
+# CODE EXAMPLE
+...
+# The PySpark baseline in terms of speed, it is 10 times more efficient than others.
+from pyspark.sql import SparkSession
+spark = SparkSession.builder.appName("DataFrame").getOrCreate()
+df = spark.read.json("myfile.json")
+...
+
+
+# Example №7
+# Context: The code instance implements the functionality of changing the working api depending on the time of year,
+# since this is how it works for the customer.
+# Comments: Since the case is clearly unusual in the business logic of the application, it is better to indicate to a
+# future colleague at the moment immediately in the code, of course briefly and concisely. This will obviously save a
+# lot of reserch time.
+
+# CODE EXAMPLE
+...
+# For some reason, the customer has one valid API in winter, and another for the rest of the year, configured here.
+# see the documentation (<link>)
+current_month_num = datetime.datetime.now().month
+winter_months_nums = [12, 1, 2]
+api_actual_url = API_URL_WINTER_MONTHS if current_month_num in winter_months_nums else API_URL_NOT_WINTER_MONTHS
+...
+
+
+
+
+# 3.2 -----------------------------------------------------------------------------------------------------------------
+# In this section, I will show examples of when added comments are inappropriate and instead of writing a comment,
+# you can make it the most visual and elegant.
+
+# Example №1
+# Context: The presented function serves to determine whether all the operators of the institution,
+# in this context of the "Regional level" are offline, and, depending on the result, implement the
+# corresponding scenario.
+# Comments: An important remark right away is that there are also aspects in this code that should be corrected,
+# for example, long variable names or the use of Classes and genenrics instead of faceless data structures,
+# but here we focus on comments.
+# Here we can see that a comment was written due to the fact that it is difficult to really understand what this if it
+# does and why, however, by bringing this functionality into a separate function with a clear name, we not only made
+# this piece understandable, but also gave a tool that is clearly useful in other parts of the program. The verification
+# mechanism itself has also been changed to a more concise and understandable one, using the expressiveness of Python.
+
+# WAS
+...
+# If there is no operator in the Regional institution
+if "offline" in selected_court_parent_operators_status and len(set(selected_court_parent_operators_status)) == 1:  # <- The main change will happen here
+...
+
+# BECAME
+...
+def is_all_court_operators_offline(court_operators_status: list[str]) -> bool:
+    if all(i == 'offline' for i in selected_court_parent_operators_status):
+        return True
+    return False
+if is_all_court_operators_offline(selected_court_parent_operators_status):  # <- There has been a main change here
+...
+
+# Example №2
+# Context: In this example, the type of the 'cases' variable is checked, since by some coincidence the API issues
+# completely different formats when there are many documents by id in db and when there is one document.
+# Comments: The main edit here is that we are transferring the query parsing functionality outside the current function.
+# That is, we decompose the functionality, now the processing of different types of responses takes place in the module
+# from which the 'get_the_court_cases' function is imported, and in the current function we only process each case with
+# our algorithm - a very good solution. Also in the new function, we will replace the type check with 'type()' with
+# 'isinstance()' since this is a more correct and pythonic option.
+
+# WAS
+...
+cases = get_the_court_cases(user_data["auth_iin"])
+if type(cases) is XMLDictNode:  # this check is needed to determine one or more court cases gained from api
+    // some code
+else:
+    // some code
+...
+
+# BECAME
+...
+cases = get_the_court_cases(user_data["auth_iin"])
+for i in cases:
+    // do some code
+...
+
+# Example №3
+# Context: This 'if' tries to check whether there is an operator account for the login under which the user is trying
+# to log in, the check in the source code is performed using an SQL query.
+# Comments: In the current situation, of course, it is good to use ORM and Introduce an operator class into the program,
+# but from the available dosutpny possibilities, we can definitely replace the comment with more readable code, namely,
+# "hide" the SQL query with the verification logic in a separate function 'is_operator_account_exist'.
+# Also, now we can give the function a name that now displays its only functionality, accept the username
+# entered by the user and continue or not accept.
+
+# WAS
+...
+def checking_given_login_by_user(message: Message, user_data: Dict) -> None:
+    if make_query("SELECT id FROM operators WHERE login = ?", (message.text, )):  # Check for that on existence
+        // some code
+    else:
+        // some code
+...
+
+# BECAME
+...
+def is_operator_account_exist(operator_login: str) -> bool:
+    if make_query("SELECT id FROM operators WHERE login = ?", (message.text, )):
+        return True
+    return False
+
+def operator_auth_login_acceptance(message: Message, user_data: Dict) -> None:
+    if is_operator_account_exist(operator_login: message.text):
+        // some code
+    else:
+        // some code
+...
+
+# Example №4
+# Context: In this example, the function redirects the operator to the operating mode after the initiation of this
+# mode, in the operating mode, the operator accepts and processes requests in the chat.
+# Comments: Here it was possible to remove the comment by renaming the local variables of the function to more
+# readable and meaningful, in addition, a generic was added that now contains a meta-information about the user,
+# to implement this edit, a fairly large section of the code had to be affected, but the readability is not enough.
+
+# WAS
+...
+def operator_conversation_workflow(message, interlocutor_chat_id, user_data, session_id):
+    if message.text == bot_buttons_phrases_dict[user_data["language"]]['operator_inconversation_buttons'][0]:
+        // some code
+        operator_main_menu(message, user_data=user_data, operator_login=operator_login)  # here user_data mean operator user_data
+...
+
+# BECAME
+...
+def launch_operator_conversation_workflow_loop(message: Message, interlocutor_chat_id: int, operator_metainfo: UserMetaInfo, session_id: int):
+    if message.text == bot_buttons_phrases_dict[operator_metainfo["language"]]['operator_inconversation_buttons'][0]:
+        // some code
+        operator_main_menu(message, operator_metainfo=operator_metainfo, operator_login=operator_login)
+...
+
+# Example №5
+# Context: In this case, we consider a piece of code that generates lists with values that are indicators of the
+# number of requests on the timeline.
+# Comments: Here it is possible to show that we fill in with zeros those values of the sheet that do not have data,
+# and without a comment - for this we fill in the list with zeros at the initialization stage. Thus, we also manage to
+# remove the unnecessary 'else' from the block with the branching of the program, which has a good effect on code
+# readability.
+
+# WAS
+...
+# generating list with zero in empty segments (dates without data)
+zero_tg_bot_failed_sessions_points = []
+iterating_date = general_min_date
+while iterating_date <= general_max_date:
+    if iterating_date.strftime("%Y-%m-%d") not in tg_bot_failed_sessions_of_current_court:
+        zero_tg_bot_failed_sessions_points.append(0)
+    else:
+        // some code
+...
+
+# BECAME
+...
+zero_tg_bot_failed_sessions_points = [0] * len(chart_timeline_dots)
+iterating_date = general_min_date
+while iterating_date <= general_max_date:
+    if iterating_date.strftime("%Y-%m-%d") in tg_bot_failed_sessions_of_current_court:
+        // some code
+...
+
