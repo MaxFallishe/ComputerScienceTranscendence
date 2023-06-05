@@ -1,0 +1,154 @@
+# Continuing the topic of comments in the code, it makes sense to pay special attention to the correct comments,
+# which in general can be divided into the following types:
+# 1. Informative comments - comments that explain some difficult points, which cannot be explained by changing the code itself.
+# 2. Intent comments - an explanation of some intentions that the developer puts into the code.
+# 3. Clarification comments - disclosure of the meaning of mysterious arguments, the names of which also cannot be made clear and concise.
+# 4. Comments warning about consequences - comments that can protect future developers from undesirable consequences when changing any code.
+# 5. Reinforcement comments - those that will help emphasize the importance of a particular circumstance, for example, why the number 10 is added to this variable.
+# 6. TODO comments - standard practice for notes for the future, for example, a comment that indicates that this function should be rewritten in the future.
+
+# Example №1
+# Context: In the presented function, active work begins with the operator and user statuses, which makes it necessary
+# to develop debugging tools.
+# Comments: Here you can observe the 6th type of comments - TODO comments, the main goal is not only to fix what
+# we want to do more, but also why.
+
+# CODE EXAMPLE
+...
+# TODO special function that resets the status of both the operator and user in the database to default, now we have to restart the program for this.
+def operator_conversation_workflow(message: Message, interlocutor_chat_id: int, user_data: dict, session_id: int):
+...
+
+# Example №2
+# Context: In this case, the function converts the created dictionary into a `Message` object from the framework,
+# which is an unusual process.
+# Comments: In this case, we warn the project developer about potential dangers and consequences - the 4th type of
+# comment, in addition, we also write down that ideally we want to decompose the function, that is, to refactor.
+
+# CODE EXAMPLE
+...
+# In this function be careful with somehow changing `custom message` - most likely, this will break the function due
+# to the complexity of converting `custom message` to a Message object. We also need to decompose the function.
+def user_rate_functionality_call(message, interlocutor_chat_id, user_data, session_id, custom_message):
+...
+
+# Example №3
+# Context: In this situation, the operator has several buttons when entering the operating mode and the operators have
+# already asked several times to add a button that would confirm that they are now in active operation mode.
+# Comments: Therefore, a TODO comment (6th type) was added that not only describes what needs to be done and why,
+# but also describes the approximate priority of the task.
+
+# CODE EXAMPLE
+...
+# TODO Add a button to check if everything is OK with the operator's account, whether the operator is currently
+# accepting requests from users - personal request from the operators.
+buttons_text = bot_buttons_phrases_dict[user_data["language"]]['operator_menu_buttons']
+...
+
+# Example №4
+# Context: The function under review contains an algorithm for evaluating the user's conversation with the operator,
+# but the order is very important here because if you change it, the program will get into deadlock.
+# Comments: In this case, we are trying to strengthen an important circumstance that may seem trivial at first
+# (5th type). In the comments, we focus on what a careless action can lead to.
+
+# CODE EXAMPLE
+...
+# It is worth noting that in this function it is important that the operator is released even before the user evaluates
+# his work, otherwise an operator block and a thread hang is possible.
+def user_rate_the_conversations(message, interlocutor_chat_id, user_data, session_id):
+...
+
+# Example №5
+# Context: In this function, several lines for testing are installed that emulate the external API due to the
+# specifics of testing the project
+# Comments: Here we indicate our intentions regarding the written code, namely for testing needs (2nd type).
+
+# CODE EXAMPLE
+...
+# This cap used to test the dev branch to emulate Telegram API request, generates keyboard without a request.
+buttons_text = bot_buttons_phrases_dict[user_data["language"]]['interactions_with_operator_submenu_buttons']
+...
+
+# Example №6
+# Context: The `try-except` construct was added to the presented function at the initial development stage.
+# Comments: In the comments, we prescribe the need to get rid of the redundant construct (6th type), while we can afford not to
+# explain exactly why, since it is clear that `try-except` is not the most productive thing and generally not the
+# best practice.
+
+# CODE EXAMPLE
+...
+# TODO get rid of the `try-except` construct in the function and replace it with an error handler.
+def interactions_with_operator_start_chat(message: Message, user_data: Dict, court_level) -> None:
+...
+
+# Example №7
+# Context: In the presented function, a situation occurred when certain information is collected on the Technical Task
+# but nothing is done with it.
+# Comments: In the comments, we not only talk directly about the problem, but also clarify the mysterious meaning
+# of the variable (3rd type).
+
+# CODE EXAMPLE
+...
+# At the moment, information about the user's region is collected, but it is not used anywhere and is not
+# even stored in the database.
+def leave_a_review_step_3(message: Message, user_data: dict, review_data: dict):
+...
+
+# Example №8
+# Context: In this case, in the line of code that is commented, icons are "glued" to the names of institutions
+# at the request of the customer.
+# Comments: In accordance with the 3rd type of comments, here we are trying to explain a rather strange moment in the
+# code, in addition to warn against the possible idea of optimizing the process.
+
+# CODE EXAMPLE
+...
+# We add a smiley face to the name of each court as the customer asked
+# (now each court will be displayed in the list of courts like this), in this place the optimal moment for this
+# is definitely not worth transferring emoticons to the database.
+regional_courts_list = [REGIONAL_COURT_ICON + "".join(tup) for tup in regional_courts_list]
+...
+
+# Example №9
+# Context: The script in which this comment is hidden is an important element when the project is first launched
+# on the server.
+# Comments: Since the developer will most likely want to launch this file directly, a comment is written directly
+# in it that it is worth launching it strictly differently (5th type).
+
+# CODE EXAMPLE
+...
+# This file must be used with "source bin/activate.csh" *from csh*.
+# You cannot run it directly.
+...
+
+# Example №10
+# Context: The section of code to which the comment refers contains a lot of mathematical calculations.
+# Comments: Here, the development team working with legacy system directly indicates that it is not
+# yet known why counterintuitive mechanics works (3-rd type).
+
+# CODE EXAMPLE
+...
+# Here, we don't know why != works and == breaks
+...
+
+# Example №11
+# Context: In this segment, work is performed with time formats and TOML.
+# Comments: This section of the code looks rather unintuitively understandable, and since we do not have the ability
+# to change standard methods, the best solution is a competent comment (1st type).
+
+# CODE EXAMPLE
+...
+# The TOML norm specifies that it's local time thus we drop the offset.
+return v.isoformat()[:-6]
+...
+
+# Example №12
+# Context: In this example, the implementation of deserialization of a complex legacy object (not generics) takes place.
+# Comments: Here we explain the mechanism of the conversion of one format into another, it is worth mentioning that it
+# is possible to make the code more understandable only at the expense of the code itself, but in this situation it
+# turns out quite clearly to express the essence with the help of a comment (1st type).
+
+# CODE EXAMPLE
+...
+# Converting {'a': [{...}, {...}, {...}...], 'b': [{...}, {...}, {...}...]} to [{}, {}]
+def dict_of_lists_to_set_array(dict_of_lists):
+...
