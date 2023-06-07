@@ -1,0 +1,374 @@
+# It's time to give examples of bad comments and systematize them in some way in order to definitely
+# prevent them in projects:
+# 1.  Non-obvious comments - it is important that the connection between the comment and the code it describes is clear,
+# and not vice versa.
+# 2.  Poorly worded comments - if you already decide to write a comment, then you should write the best possible,
+# concise and informative one. Do not write comments in a hurry.
+# 3.  Unreliable comments - those that are inaccurate or do not correspond to the truth at all.
+# 4.  Comments "Noise" - comments that do not provide any new information, but only duplicate the obvious.
+# 5.  Positional markers - comments by type `# #####` or `///////`, in most cases, they make up the ballast,
+# which is better to get rid of. You should focus on the following logic - headings attract attention only when
+# they are not too common.
+# 6.  Comments after `}` - where there is a desire to comment on closing brackets or an analog in Python, it often
+# says that it may be worth shortening its functions.
+# 7.  Redundant comments  - those that do not explain the code, do not disclose intentions and, moreover, are not
+# easier to read than the code itself.
+# 8.  Too much information in a comments - you need to know the measure in the size of the comments,
+# you should not include historical discussions or descriptions of details that are not relevant in the comments.
+# 9.  Non-local information in a comments - the comment should describe the code directly located nearby. It is not
+# necessary to present system-level information in the context of a local comment.
+# 10. Mandatory comments - comments that are regulated by some style that requires, for example, that each
+# variable should be marked with an explanatory comment, an extremely controversial thing that clutters up the code,
+# causing general confusion and disorientation.
+# 11. Commented code - it is a very bad practice to comment on unused code, if the code is not needed, just delete it.
+# 12. A comment instead of a good code - a well-chosen name for a compact function that performs a single
+# operation is always better than a header with a detailed comment.
+
+# Example №1
+# Context: In the example, you can see the asynchronous function that was used to check the existence of the event.
+# Comments: Here, the code is no longer needed, instead of being deleted, they simply commented out - that there is an
+# extremely undesirable practice, the most correct solution is to delete this comment (type 11).
+
+# WAS
+...
+from utils.mongo.events_class import Events
+from utils.mongo.user_class import User
+
+# async def check_event(data, admin: bool = False):
+# event = await Events.get_one(data)
+# print('event', event.get('status'), admin)
+...
+
+# BECAME
+...
+from utils.mongo.events_class import Events
+from utils.mongo.user_class import User
+...
+
+# Example №2
+# Context: Here you can see an example of how an attempt was made in the code to implement branching, provided that
+# the user does not exist.
+# Comments: In this case, comments are completely unnecessary since the code already fully describes the functionality
+# that commits (type 4).
+
+# WAS
+...
+# Check the existence of the user
+user = await User(user_id=query.message.chat.id).get_info()
+if not user:
+...
+
+# BECAME
+...
+user = await User(user_id=query.message.chat.id).get_info()
+if not user:
+...
+
+# Example №3
+# Context: In this example, there is interaction with modules that work with the operating system, often trying to
+# get some settings.
+# Comments: In these lines of code, you can notice that the comment is trying to explain the operation of a function
+# from the standard library, but with the help of type annotations, you can describe the same much more succinctly,
+# in particular with the help of `Literal` (type 12).
+
+# WAS
+...
+if os_name == "nt":
+    run_as_admin: int = ctypes.windll.shell32.IsUserAnAdmin()
+    # returns 1 if admin, 0 if regular user
+...
+
+# BECAME
+...
+if os_name == "nt":
+    run_as_admin: Literal[1, 0] = ctypes.windll.shell32.IsUserAnAdmin()
+...
+
+# Example №4
+# Context: In the presented function, we want to return the value `True` if the user is an Administrator,
+# while `os.getuid()` just outputs `0` if this is the case.
+# Comments: In the original code, the comment tries to compensate for the incomprehensible value of `0` and
+# why exactly it defines the uid as the right one. However, just by doing a little refactoring, and putting `0` into
+# a constant, we will make the code much more expressive. Otherwise `if not uid:` reads more like - if the uid
+# does not exist/not found (type 12).
+
+# WAS
+...
+uid: int = os.getuid()
+if not uid:  # the same for: if uid == 0
+    logging.info("User is admin")
+    return True
+...
+
+# BECAME
+...
+ADMIN_UID: int = 0
+user_uid: int = os.getuid()
+if user_uid == ADMIN_UID:
+    logging.info("User is admin")
+    return True
+...
+
+# Example №5
+# Context: In this example, we see part of the code from the program that reads fingerprints, and the author tries to
+# return as a result a list describing which fingerprints were received.
+# Comments: As you can see in the original version, the existing comment tries to indicate to us that a thumb check
+# is being carried out right now. It is better to implement this mechanism through a more compact and clear code,
+# immediately marking the list of `fingers` with type annotations in the comments, explaining which index is
+# responsible for which finger (type 2).
+
+# WAS
+...
+def fingersUp(self):
+    fingers = []
+    # Thumb
+    if self.lmList[self.tipIds[0]][1] < self.lmList[self.tipIds[0]-1][1]:
+        fingers.append(1)
+    else:
+        fingers.append(0)
+...
+
+# BECAME
+...
+def fingers_up(self):
+    # fingers list ration: 0 - thumb, 1 - index finger, 2 - middle finger , 3 - ring finger, 4 - pinky.
+    fingers: list[Literal[0, 1]] = [0] * 5
+    if self.lmList[self.tipIds[0]][1] < self.lmList[self.tipIds[0]-1][1]:
+        fingers[0] = 1
+...
+
+# Example №6
+# Context: The example shows a quite usual list of imports for a python program, in this case the program
+# draws .png images.
+# Comments: In imports, you can see an unused commented-out library, in accordance with the rules of writing good code,
+# this comment should be deleted (type 11).
+
+# WAS
+...
+from dataclasses import dataclass
+import random
+from PIL import Image, ImageDraw, ImageFont
+# from numba import prange
+...
+
+# BECAME
+...
+import random
+from dataclasses import dataclass
+from PIL import Image, ImageDraw, ImageFont
+...
+
+# Example №7
+# Context: In the code below, we can see part of one of the methods of the class that is responsible for drawing
+# lines on the image.
+# Comments: As you can see, most likely in the current example `print()` was used as a debugging mechanism. Leaving
+# such debug elements in the code is not the best practice, so it is better to delete this part, however, if there is
+# a need to leave this output, it is better to use `logging` (type 11).
+
+# WAS
+...
+def _drawing_line(self):
+    for slovo in self.stroka.split():
+        # print(self.width, self.height)
+...
+
+# BECAME
+...
+def _drawing_line(self):
+    for slovo in self.stroka.split():
+...
+
+# Example №8
+# Context: Below is an example of how the generated image object is appended to the `pictures` field of the class.
+# Comments: The comment presented here adds absolutely no information to the meaning of the code, so there is no point
+# in saving it in the code (type 4).
+
+# WAS
+...
+# Adding a picture to the array
+self.pictures.append(word_image)
+...
+
+# BECAME
+...
+self.pictures.append(word_image)
+...
+
+# Example №9
+# Context: In this section of the code, an action is performed to sort the source array, which in turn is
+# accompanied by a comment.
+# Comments: In this example, an inefficient method is used, namely, the wheel is invented, respectively, if you use the
+# built-in tools, you can completely get rid of the comment, especially that the key word `sort` in the name of the
+# method perfectly describes the meaning of the operation (type 12).
+
+# WAS
+...
+all_my_events_dict = {}
+# Sort by year
+for event in events:
+    event_datetime = datetime.utcfromtimestamp(event.get('timestamp'))
+    year = event_datetime.year
+    try:
+        all_my_events_dict[year].append(event)
+    except:
+        all_my_events_dict[year] = [event]
+...
+
+# BECAME
+...
+from itertools import groupby
+from operator import itemgetter
+
+for event in events:
+    event['datetime'] = datetime.utcfromtimestamp(event.get('timestamp'))
+
+events.sort(itemgetter('datetime'))
+events_by_year = groupby(events, key=lambda event: event['datetime'].year)
+...
+
+# Example №10
+# Context: In this segment, we observe the code of an asynchronous function in which a request from a user is
+# processed in a telegram bot.
+# Comments: In this case, we see the use of positional markers in conjunction with the usual comments of sections,
+# in this case these styles are mixed, which does not allow us to quickly understand the presented code and logic. In
+# the corrected version, we made the code simpler and more visual, generally getting rid of comments (type 5).
+
+# WAS
+...
+    # Checking the existence of an event
+    event = await Events.get_one(answer_data)
+    if not event:
+        return await query.answer('There is no such event anymore, or it is not available!')
+    ################################
+    # If the event has already passed
+    if event.get('timestamp') < int(time.time()):
+        return await query.answer('The event has already passed!')
+...
+
+# BECAME
+...
+    event = await Events.get_one(answer_data)
+    if not event:
+        return await query.answer('There is no such event anymore, or it is not available!')
+    if event.is_passed:
+        return await query.answer('The event has already passed!')
+...
+
+# Example №11
+# Context: This segment presents code that implements some product logic using the pe file module.
+# Comments: In the presented solution, you can notice a comment that says that the line was added solely in order to
+# avoid the IDE warning, however, it is easy to fix this by simply implementing the correct logic in the code (type 7).
+# This comment is clearly redundant information.
+
+# WAS
+...
+decoded_dict = {}  # To avoid "Local variable 'pe' might be referenced before assignment" alert.
+    try:
+        pe = pefile.PE(file_path)
+    except Exception as e:
+        logging.error(e)
+        return decoded_dict
+...
+
+# BECAME
+...
+try:
+    pe = pefile.PE(file_path)
+except Exception as e:
+    logging.error(e)
+    return None
+...
+
+# Example №12
+# Context: This piece of code is a way of processing StringTable if one was found.
+# Comments: In this case, the author's comments can confuse his colleagues, since he describes inside the comment at
+# the same time the reliability of comments to his case, and in general regulates in them how many elements should be
+# in the array as a result, which is not accurate information (type 3).
+
+# WAS
+...
+if hasattr(structure, 'StringTable'):
+    logging.debug("This entry CONTAINS attribute StringTable.")
+    string_table: list = structure.StringTable  # In my case:len==1.
+    # Contains 1 element of class 'pefile.Structure'
+    encoded_dict: dict = string_table[0].entries
+...
+
+# BECAME
+...
+if hasattr(structure, 'StringTable'):
+    logging.debug("This entry CONTAINS attribute StringTable.")
+    string_table = structure.StringTable
+    encoded_dict = string_table[0].entries
+...
+
+# Example №13
+# Context: In the current example, the program processes the contents of the file that was saved using pe file.
+# Comments: In the current example, you can see how the author decided to mark exactly how he is looking for values in
+# the dictionary, but this abbreviation is confusing because it is not clear what exactly the person included in
+# this abbreviation (type 2).
+
+# WAS
+...
+    file_info: list = pe.FileInfo
+    # LBYL
+    for structure in file_info[0]:
+        if not hasattr(structure, 'StringTable'):
+            continue
+...
+
+# BECAME
+...
+    file_info: list = pe.FileInfo
+    # Obtaining values is loop below implemented in accordance with the LBYL principle.
+    for structure in file_info[0]:
+        if not hasattr(structure, 'StringTable'):
+            continue
+...
+
+# Example №14
+# Context: The given code is a segment of the program for parsing goods from the Excel table, in the given segment,
+# values are entered into variables exclusively from the first column.
+# Comments: In this case, the comments tell us what values are stored in the cells, but it would be more reasonable
+# to indicate this in the name of the variables themselves in which the values are stored, and delete the variables
+# themselves (type 12).
+
+# WAS
+...
+if column_num == 1:
+    for i in range(sheet.max_row):
+        val1 = str(sheet.cell(row = i+1, column = column_num).value)#Обозначение
+        val12 = str(sheet.cell(row = i+1, column = 12).value)#Наименование
+...
+
+# BECAME
+...
+if column_num == 1:
+    for i in range(sheet.max_row):
+        product_article_number = str(sheet.cell(i+1, column_num).value)
+        product_name = str(sheet.cell(i+1, PRODUCT_NAME_COLUMN_NUM).value)
+...
+
+# Example №15
+# Context: The code below shows the process of dividing the text into paragraphs, which will later be translated
+# into image format.
+# Comments: In the presented code there is a certain illogic associated with the comment, namely, the name of the
+# entity that is contained in the permanent is expressed using the comment, and not using the name of the permanent
+# itself. The code itself can be made easier by replacing the comment with a good name for the variable (type 12).
+
+# WAS
+...
+def _get_split_text(self, font_use) -> list:
+    // method logic
+
+# split into paragraphs
+text_split = self._get_split_text(font_use)
+...
+
+# BECAME
+...
+def _get_split_text(self, font_use) -> list:
+    // method logic
+
+paragraphs = self._get_split_text(font_use)
+...
