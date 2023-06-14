@@ -22,7 +22,7 @@ class TestTask3(unittest.TestCase):
 
     def test_get_list_len__5(self):
         result = get_list_len([None, None])
-        self.assertEqual(result, 3)
+        self.assertEqual(result, 2)
 
 
 
