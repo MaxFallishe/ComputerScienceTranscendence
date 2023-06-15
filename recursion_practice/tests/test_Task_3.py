@@ -3,7 +3,7 @@ from ..Task_3 import *
 
 
 class TestTask3(unittest.TestCase):
-    # ### TEST GET_NUMBER_DIGITS_SUM() FUNCTION
+    # ### TEST GET_LIST_LEN() FUNCTION
     def test_get_list_len__1(self):
         result = get_list_len([1, 2, 3])
         self.assertEqual(result, 3)
