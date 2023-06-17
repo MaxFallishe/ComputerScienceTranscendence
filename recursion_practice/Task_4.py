@@ -1,4 +1,6 @@
-def is_string_palindrome(text: str, start_indx=0) -> bool:
+def is_string_palindrome(text: str, start_indx=None) -> bool:
+    if start_indx is None:
+        start_indx = 0
     if start_indx >= len(text) / 2:
         return True
     if text[start_indx] == text[(start_indx*-1)-1]:
