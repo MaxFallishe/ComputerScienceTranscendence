@@ -3,7 +3,7 @@ import unittest
 from ..Task_8 import *
 
 
-class TestTask7(unittest.TestCase):
+class TestTask8(unittest.TestCase):
     # ### TEST GET_ALL_FILES() FUNCTION
     def test_get_all_files__1(self):
         result = set(get_all_files('.'))
