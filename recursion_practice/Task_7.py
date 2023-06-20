@@ -1,25 +1,18 @@
-from typing import Optional
+from typing import Optional, Union
 
 
-def get_second_largest_number(lst: list[int]) -> Optional[int]:
+def get_second_largest_number(lst: list) -> Optional[Union[int, float]]:
     if len(lst) < 2:
         return None
-    last_lst_elm = lst.pop()
-    penultimate_lst_elm = lst.pop()
-    two_sorted_elements = [last_lst_elm, penultimate_lst_elm]
-    if penultimate_lst_elm < last_lst_elm:
-        two_sorted_elements = [penultimate_lst_elm, last_lst_elm]
-    two_largest_numbers = get_largest_numbers_sublist(lst, two_sorted_elements)
-    return two_largest_numbers[0]
+    return get_second_largest_number_recursively(lst, float('-inf'), float('-inf'))
 
 
-def get_largest_numbers_sublist(lst: list[int], sublst: list[int]) -> list[int]:
+def get_second_largest_number_recursively(lst: list, max_number, second_max_number) -> Union[int, float]:
     if len(lst) == 0:
-        return sublst
+        return second_max_number
     last_lst_elm = lst.pop()
-    for i in range(-1, -len(sublst)-1, -1):
-        if last_lst_elm > sublst[i]:
-            sublst.insert(i+len(sublst)+1, last_lst_elm)
-            sublst.pop(0)
-            break
-    return get_largest_numbers_sublist(lst, sublst)
+    if last_lst_elm > max_number:
+        max_number, second_max_number = last_lst_elm, max_number
+    elif last_lst_elm > second_max_number:
+        second_max_number = last_lst_elm
+    return get_second_largest_number_recursively(lst, max_number, second_max_number)
