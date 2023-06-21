@@ -1,9 +1,17 @@
-def generate_parenthesis(n: int) -> list[str]:
-    if n == 0:
-        return [""]
-    answers = []
-    for left_count in range(n):
-        for left_string in generate_parenthesis(left_count):
-            for right_string in generate_parenthesis(n - 1 - left_count):
-                answers.append(f'({left_string}){right_string}')
-    return answers
+def generate_parenthesis_front(n: int) -> list[str]:
+    return generate_parenthesis_back([], [], 0, 0, n)
+
+
+def generate_parenthesis_back(answer, cur_string, left_count, right_count, n):
+    if len(cur_string) == 2 * n:
+        answer.append("".join(cur_string))
+        return
+    if left_count < n:
+        cur_string.append("(")
+        generate_parenthesis_back(answer, cur_string, left_count + 1, right_count, n)
+        cur_string.pop()
+    if right_count < left_count:
+        cur_string.append(")")
+        generate_parenthesis_back(answer, cur_string, left_count, right_count + 1, n)
+        cur_string.pop()
+    return answer

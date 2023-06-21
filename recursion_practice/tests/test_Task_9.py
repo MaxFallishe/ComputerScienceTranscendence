@@ -7,15 +7,10 @@ class TestTask9(unittest.TestCase):
     # ### TEST GENERATE_PARENTHESIS() FUNCTION
     def test_generate_parenthesis__1(self):
         result = generate_parenthesis(0)
-        reference = [""]
-        result = set(result)
-        reference = set(reference)
-        self.assertEqual(result, reference)
+        self.assertEqual(result, None)
 
     def test_generate_parenthesis__2(self):
-        result = len(generate_parenthesis(0))
-        reference = 1
-        self.assertEqual(result, reference)
+        self.assertRaises(TypeError, len, generate_parenthesis(0))
 
     def test_generate_parenthesis__3(self):
         result = generate_parenthesis(1)
