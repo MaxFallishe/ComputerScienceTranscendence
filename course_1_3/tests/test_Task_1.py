@@ -584,6 +584,67 @@ class TestTask1(unittest.TestCase):
         result = simple_tree.LeafCount()
         self.assertEqual(result, 1)
 
+    # ### TEST NODES_WITH_LEVELS() METHOD
+    def test_nodes_with_levels__1(self):
+        simple_tree = SimpleTree(None)
+        result = simple_tree.nodes_with_levels()
+        reference = []
+        self.assertEqual(result, reference)
+
+    def test_nodes_with_levels__2(self):
+        node_0 = SimpleTreeNode(0, None)
+        simple_tree = SimpleTree(node_0)
+        result = set(simple_tree.nodes_with_levels())
+        reference = {(node_0, 0)}
+        self.assertEqual(result, reference)
+
+    def test_nodes_with_levels__3(self):
+        node_0 = SimpleTreeNode(0, None)
+        node_1 = SimpleTreeNode(1, None)
+        node_2 = SimpleTreeNode(2, None)
+
+        simple_tree = SimpleTree(node_0)
+        simple_tree.AddChild(node_0, node_1)
+        simple_tree.AddChild(node_1, node_2)
+
+        result = set(simple_tree.nodes_with_levels())
+        reference = {(node_0, 0), (node_1, 1), (node_2, 2)}
+        self.assertEqual(result, reference)
+
+    def test_nodes_with_levels__4(self):
+        node_0 = SimpleTreeNode(0, None)
+        node_1 = SimpleTreeNode(1, None)
+        node_2 = SimpleTreeNode(2, None)
+        node_3 = SimpleTreeNode(3, None)
+
+        simple_tree = SimpleTree(node_0)
+        simple_tree.AddChild(node_0, node_1)
+        simple_tree.AddChild(node_1, node_2)
+        simple_tree.AddChild(node_0, node_3)
+
+        result = set(simple_tree.nodes_with_levels())
+        reference = {(node_0, 0), (node_1, 1), (node_2, 2), (node_3, 1)}
+        self.assertEqual(result, reference)
+
+    def test_nodes_with_levels__5(self):
+        node_0 = SimpleTreeNode(0, None)
+        node_1 = SimpleTreeNode(1, None)
+        node_2 = SimpleTreeNode(2, None)
+        node_3 = SimpleTreeNode(3, None)
+        node_4 = SimpleTreeNode(4, None)
+        node_5 = SimpleTreeNode(5, None)
+
+        simple_tree = SimpleTree(node_0)
+        simple_tree.AddChild(node_0, node_1)
+        simple_tree.AddChild(node_0, node_2)
+        simple_tree.AddChild(node_1, node_3)
+        simple_tree.AddChild(node_2, node_4)
+        simple_tree.AddChild(node_4, node_5)
+
+        result = set(simple_tree.nodes_with_levels())
+        reference = {(node_0, 0), (node_1, 1), (node_2, 1), (node_3, 2), (node_4, 2), (node_5, 3)}
+        self.assertEqual(result, reference)
+
 
 if __name__ == '__main__':
     unittest.main()
