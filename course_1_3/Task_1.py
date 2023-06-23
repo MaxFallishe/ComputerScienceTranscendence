@@ -72,8 +72,8 @@ class SimpleTree:
 
     def __nodes_with_levels_rec(self, node, level):
         if not node.Children:
-            return [(node.NodeValue, level)]
+            return [(node, level)]
         answer = []
         for i in node.Children:
             answer += self.__nodes_with_levels_rec(i, level+1)
-        return answer + [(node.NodeValue, level)]
+        return answer + [(node, level)]
