@@ -55,14 +55,14 @@ class SimpleTree:
     def LeafCount(self):
         if not self.Root:
             return 0
-        return self.get_leaf_count(self.Root)
+        return self.__leaf_count(self.Root)
 
-    def get_leaf_count(self, node):
+    def __leaf_count(self, node):
         if not node.Children:
             return 1
         counter = 0
         for i in node.Children:
-            counter += self.get_leaf_count(i)
+            counter += self.__leaf_count(i)
         return counter
 
     def nodes_with_levels(self):
