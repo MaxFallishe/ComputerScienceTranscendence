@@ -65,15 +65,15 @@ class SimpleTree:
             counter += self.get_leaf_count(i)
         return counter
 
-    def get_nodes_with_levels(self):
-        return self.__get_nodes_with_levels_rec(self.Root, 0)
+    def nodes_with_levels(self):
+        return self.__nodes_with_levels_rec(self.Root, 0)
 
-    def __get_nodes_with_levels_rec(self, node, level):
+    def __nodes_with_levels_rec(self, node, level):
         if not node.Children:
             return [(node.NodeValue, level)]
         answer = []
         for i in node.Children:
-            answer += self.__get_nodes_with_levels_rec(i, level+1)
+            answer += self.__nodes_with_levels_rec(i, level+1)
         return answer + [(node.NodeValue, level)]
 
 
