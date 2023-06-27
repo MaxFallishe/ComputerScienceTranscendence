@@ -14,12 +14,6 @@ class BSTFind:
         self.NodeHasKey = False
         self.ToLeft = False
 
-    def __str__(self):
-        node_representation = self.Node
-        if node_representation is not None:
-            node_representation = self.Node.NodeKey
-        return f"BSTFind obj\n'''\n{node_representation}\n{self.NodeHasKey}\n{self.ToLeft}\n'''"
-
 
 class BST:
     def __init__(self, node):
@@ -129,7 +123,6 @@ class BST:
             bst_find.Node.Parent = None
 
 
-
     def __delete_root_node(self) -> None:
         if not self.Root.LeftChild and not self.Root.RightChild:
             self.Root = None
@@ -167,7 +160,6 @@ class BST:
 
             self.Root = new_root
             new_root.Parent = None
-
 
 
     def Count(self):
