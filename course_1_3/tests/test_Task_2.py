@@ -481,7 +481,6 @@ class TestDeleteNodeToKey(unittest.TestCase):
         bst = bst_mocks_generator.generate_bst()
 
         bst.DeleteNodeByKey(12)
-        print(bst_mocks_generator.node_13.LeftChild.NodeKey)
         self.assertEqual(bst_mocks_generator.node_13.RightChild, bst_mocks_generator.node_14)
 
     def test_delete_node_to_key__27(self):
