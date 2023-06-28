@@ -10,6 +10,24 @@ class BSTMocksGenerator:
         pass
 
 
+class BSTMocksGeneratorType0(BSTMocksGenerator):
+    """
+    Binary Strictly Tree object with following structure:
+                1
+             /    \
+           None   None
+    """
+
+    def __init__(self):
+        super().__init__()
+        self.node_1 = BSTNode(1, 'node1', None)
+
+    def generate_bst(self):
+
+        bst = BST(self.node_1)
+        return bst
+
+
 class BSTMocksGeneratorType1(BSTMocksGenerator):
     """
     Binary Strictly Tree object with following structure:
@@ -110,6 +128,47 @@ class BSTMocksGeneratorType3(BSTMocksGenerator):
         self.node_10.RightChild = self.node_11
         self.node_14.LeftChild = self.node_13
         self.node_14.RightChild = self.node_15
+
+        bst = BST(self.node_8)
+        return bst
+
+
+class BSTMocksGeneratorType4(BSTMocksGenerator):
+    """
+    Binary Strictly Tree object with following structure:
+                   8
+                 /    \
+               4       12
+                \     /  \
+                 6    10   14
+                / \  / \   / \
+                N 7  9 11 13  N
+    """
+
+    def __init__(self):
+        super().__init__()
+        self.node_8 = BSTNode(8, 'node8', None)
+        self.node_4 = BSTNode(4, 'node4', self.node_8)
+        self.node_12 = BSTNode(12, 'node12', self.node_8)
+        self.node_6 = BSTNode(6, 'node6', self.node_4)
+        self.node_7 = BSTNode(7, 'node7', self.node_6)
+        self.node_10 = BSTNode(10, 'node10', self.node_12)
+        self.node_14 = BSTNode(14, 'node14', self.node_12)
+        self.node_9 = BSTNode(9, 'node9', self.node_10)
+        self.node_11 = BSTNode(11, 'node11', self.node_10)
+        self.node_13 = BSTNode(13, 'node13', self.node_14)
+
+
+    def generate_bst(self):
+        self.node_8.LeftChild = self.node_4
+        self.node_8.RightChild = self.node_12
+        self.node_4.RightChild = self.node_6
+        self.node_6.RightChild = self.node_7
+        self.node_12.LeftChild = self.node_10
+        self.node_12.RightChild = self.node_14
+        self.node_10.LeftChild = self.node_9
+        self.node_10.RightChild = self.node_11
+        self.node_14.LeftChild = self.node_13
 
         bst = BST(self.node_8)
         return bst
@@ -357,13 +416,6 @@ class TestDeleteNodeToKey(unittest.TestCase):
         bst.DeleteNodeByKey(2)
         self.assertEqual(bst_mocks_generator.node_1.Parent, bst_mocks_generator.node_3)
 
-    def test_delete_node_to_key__9(self):
-        bst_mocks_generator = BSTMocksGeneratorType2()
-        bst = bst_mocks_generator.generate_bst()
-
-        bst.DeleteNodeByKey(7)
-        self.assertEqual(bst_mocks_generator.node_7.Parent, None)
-
     def test_delete_node_to_key__10(self):
         bst_mocks_generator = BSTMocksGeneratorType2()
         bst = bst_mocks_generator.generate_bst()
@@ -378,12 +430,6 @@ class TestDeleteNodeToKey(unittest.TestCase):
         bst.DeleteNodeByKey(6)
         self.assertEqual(bst_mocks_generator.node_4.RightChild, bst_mocks_generator.node_7)
 
-    def test_delete_node_to_key__12(self):
-        bst_mocks_generator = BSTMocksGeneratorType2()
-        bst = bst_mocks_generator.generate_bst()
-
-        bst.DeleteNodeByKey(6)
-        self.assertEqual(bst_mocks_generator.node_6.Parent, None)
 
     def test_delete_node_to_key__13(self):
         bst_mocks_generator = BSTMocksGeneratorType2()
@@ -452,6 +498,7 @@ class TestDeleteNodeToKey(unittest.TestCase):
         bst_mocks_generator = BSTMocksGeneratorType3()
         bst = bst_mocks_generator.generate_bst()
 
+
         bst.DeleteNodeByKey(4)
         self.assertEqual(bst_mocks_generator.node_6.LeftChild, None)
 
@@ -510,6 +557,60 @@ class TestDeleteNodeToKey(unittest.TestCase):
 
         bst.DeleteNodeByKey(8)
         self.assertEqual(bst_mocks_generator.node_4.Parent, bst_mocks_generator.node_9)
+
+    def test_delete_node_to_key__31(self):
+        bst_mocks_generator = BSTMocksGeneratorType0()
+        bst = bst_mocks_generator.generate_bst()
+
+        result = bst.DeleteNodeByKey(99)
+        self.assertEqual(result, False)
+
+    def test_delete_node_to_key__32(self):
+        bst_mocks_generator = BSTMocksGeneratorType0()
+        bst = bst_mocks_generator.generate_bst()
+
+        bst.DeleteNodeByKey(1)
+        self.assertEqual(bst.Root, None)
+
+    def test_delete_node_to_key__34(self):
+        bst_mocks_generator = BSTMocksGeneratorType4()
+        bst = bst_mocks_generator.generate_bst()
+
+        bst.DeleteNodeByKey(4)
+        self.assertEqual(bst_mocks_generator.node_8.LeftChild, bst_mocks_generator.node_6)
+
+    def test_delete_node_to_key__35(self):
+        bst_mocks_generator = BSTMocksGeneratorType4()
+        bst = bst_mocks_generator.generate_bst()
+
+        bst.DeleteNodeByKey(4)
+        self.assertEqual(bst_mocks_generator.node_6.RightChild, bst_mocks_generator.node_7)
+
+    def test_delete_node_to_key__36(self):
+        bst_mocks_generator = BSTMocksGeneratorType4()
+        bst = bst_mocks_generator.generate_bst()
+
+        bst.DeleteNodeByKey(10)
+        self.assertEqual(bst_mocks_generator.node_12.LeftChild, bst_mocks_generator.node_11)
+
+    def test_delete_node_to_key__37(self):
+        bst_mocks_generator = BSTMocksGeneratorType4()
+        bst = bst_mocks_generator.generate_bst()
+
+        bst.DeleteNodeByKey(10)
+        self.assertEqual(bst_mocks_generator.node_11.Parent, bst_mocks_generator.node_12)
+
+    def test_delete_node_to_key__38(self):
+        from itertools import permutations
+
+        nodes_keys = [i for i in range(1, 7+1)]
+
+        for i in list(permutations(nodes_keys)):
+            bst_mocks_generator = BSTMocksGeneratorType2()
+            bst = bst_mocks_generator.generate_bst()
+            for j in i:
+                bst.DeleteNodeByKey(j)
+            self.assertEqual(bst.Root, None)
 
 
 if __name__ == '__main__':
