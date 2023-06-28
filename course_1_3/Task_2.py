@@ -71,95 +71,68 @@ class BST:
         bst_find = self.FindNodeByKey(key)
         if not bst_find.NodeHasKey:
             return False
-        if bst_find.Node is self.Root:
-            self.__delete_root_node()
+        # 1. Scenario - if leftChild = None or rightChild = None or both = None
+        if None in (bst_find.Node.LeftChild, bst_find.Node.RightChild):
+            new_node = bst_find.Node.LeftChild
+            if new_node is None:
+                new_node = bst_find.Node.RightChild
+            if bst_find.Node.Parent is None:
+                self.Root = new_node
+                if new_node is not None:
+                    new_node.Parent = None
+                return
+            if new_node is not None:
+                new_node.Parent = bst_find.Node.Parent
+            if bst_find.Node.Parent.LeftChild is bst_find.Node:
+                bst_find.Node.Parent.LeftChild = new_node
+            elif bst_find.Node.Parent.RightChild is bst_find.Node:
+                bst_find.Node.Parent.RightChild = new_node
             return
 
-        if not bst_find.Node.LeftChild and not bst_find.Node.RightChild:
+        # 2. Scenario if leftChild and rightChild != None And bst_find.Node.RightChild.LeftChild is None
+        if bst_find.Node.RightChild.LeftChild is None:
+            new_node = bst_find.Node.RightChild
+            bst_find.Node.LeftChild.Parent = new_node
+            new_node.LeftChild = bst_find.Node.LeftChild
+            if bst_find.Node.Parent is None:
+                self.Root = new_node
+                new_node.Parent = None
+                return
+            new_node.Parent = bst_find.Node.Parent
             if bst_find.Node.Parent.LeftChild is bst_find.Node:
-                bst_find.Node.Parent.LeftChild = None
+                bst_find.Node.Parent.LeftChild = new_node
             elif bst_find.Node.Parent.RightChild is bst_find.Node:
-                bst_find.Node.Parent.RightChild = None
-            bst_find.Node.Parent = None
-        elif bst_find.Node.LeftChild and not bst_find.Node.RightChild:
-            if bst_find.Node.Parent.LeftChild is bst_find.Node:
-                bst_find.Node.Parent.LeftChild = bst_find.Node.LeftChild
-            elif bst_find.Node.Parent.RightChild is bst_find.Node:
-                bst_find.Node.Parent.RightChild = bst_find.Node.LeftChild
-            bst_find.Node.Parent = None
-        elif not bst_find.Node.LeftChild and bst_find.Node.RightChild:
-            if bst_find.Node.Parent.LeftChild is bst_find.Node:
-                bst_find.Node.Parent.LeftChild = bst_find.Node.RightChild
-            elif bst_find.Node.Parent.RightChild is bst_find.Node:
-                bst_find.Node.Parent.RightChild = bst_find.Node.RightChild
-            bst_find.Node.Parent = None
-        elif bst_find.Node.LeftChild and bst_find.Node.RightChild:
-            new_root = self.FinMinMax(bst_find.Node.RightChild, False)
-            if new_root.RightChild:
-                if new_root.Parent.LeftChild is new_root:
-                    new_root.Parent.LeftChild = new_root.RightChild
-                    new_root.RightChild.Parent = new_root.Parent
-                elif new_root.Parent.RightChild is new_root:
-                    new_root.Parent.RightChild = new_root.RightChild
-                    new_root.RightChild.Parent = new_root.Parent
+                bst_find.Node.Parent.RightChild = new_node
+            return
 
-            if new_root.Parent.LeftChild is new_root:
-                new_root.Parent.LeftChild = None
-            elif new_root.Parent.RightChild is new_root:
-                new_root.Parent.RightChild = None
+        # 3. Scenario if leftChild and rightChild != None And bst_find.Node.RightChild.LeftChild is None
+        new_node = self.FinMinMax(bst_find.Node.RightChild, False)
+        if new_node.RightChild is not None:
+            new_node.Parent.LeftChild = new_node.RightChild
+            new_node.RightChild.Parent = new_node.Parent
+        else:
+            if new_node.Parent.LeftChild is new_node:
+                new_node.Parent.LeftChild = None
+            elif new_node.Parent.RightChild is new_node:
+                new_node.Parent.RightChild = None
 
-            if bst_find.Node.Parent.LeftChild is bst_find.Node:
-                bst_find.Node.Parent.LeftChild = new_root
-                new_root.Parent = bst_find.Node.Parent
-            elif bst_find.Node.Parent.RightChild is bst_find.Node:
-                bst_find.Node.Parent.RightChild = new_root
-                new_root.Parent = bst_find.Node.Parent
+        new_node.LeftChild = bst_find.Node.LeftChild
+        new_node.RightChild = bst_find.Node.RightChild
+        bst_find.Node.LeftChild.Parent = new_node
+        bst_find.Node.RightChild.Parent = new_node
 
-            if new_root is not bst_find.Node.RightChild:
-                new_root.RightChild = bst_find.Node.RightChild
-            new_root.LeftChild = bst_find.Node.LeftChild
-            bst_find.Node.RightChild = None
-            bst_find.Node.LeftChild = None
-            bst_find.Node.Parent = None
+        if bst_find.Node is self.Root:
+            self.Root = new_node
+            new_node.Parent = None
+            return
 
+        new_node.Parent = bst_find.Node.Parent
 
-    def __delete_root_node(self) -> None:
-        if not self.Root.LeftChild and not self.Root.RightChild:
-            self.Root = None
-        elif self.Root.LeftChild and not self.Root.RightChild:
-            self.Root = self.Root.LeftChild
-            self.Root.Parent = None
-        elif not self.Root.LeftChild and self.Root.RightChild:
-            self.Root = self.Root.RightChild
-            self.Root.Parent = None
-        elif self.Root.LeftChild and self.Root.RightChild:
-            new_root = self.FinMinMax(self.Root.RightChild, False)
-            if new_root.RightChild:
-                if new_root.Parent.LeftChild is new_root:
-                    new_root.Parent.LeftChild = new_root.RightChild
-                    new_root.RightChild.Parent = new_root.Parent
-                elif new_root.Parent.RightChild is new_root:
-                    new_root.Parent.RightChild = new_root.RightChild
-                    new_root.RightChild.Parent = new_root.Parent
-
-            if new_root.Parent.LeftChild is new_root:
-                new_root.Parent.LeftChild = None
-            elif new_root.Parent.RightChild is new_root:
-                new_root.Parent.RightChild = None
-
-            if new_root is not self.Root.RightChild:
-                new_root.RightChild = self.Root.RightChild
-
-            new_root.LeftChild = self.Root.LeftChild
-
-            if new_root.LeftChild:
-                new_root.LeftChild.Parent = new_root
-
-            self.Root.RightChild = None
-            self.Root.LeftChild = None
-
-            self.Root = new_root
-            new_root.Parent = None
+        if bst_find.Node.Parent.LeftChild is bst_find.Node:
+            bst_find.Node.Parent.LeftChild = new_node
+        elif bst_find.Node.Parent.RightChild is bst_find.Node:
+            bst_find.Node.Parent.RightChild = new_node
+        return
 
 
     def Count(self):
