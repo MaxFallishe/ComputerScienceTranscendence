@@ -520,9 +520,11 @@ class TestDeleteNodeToKey(unittest.TestCase):
         bst_mocks_generator = BSTMocksGeneratorType0()
         bst = bst_mocks_generator.generate_bst()
 
+        bst_size_bef_del_node = bst.Count()
+        self.assertEqual(bst_size_bef_del_node, 1)
         bst.DeleteNodeByKey(1)
-        result = bst.Count()
-        self.assertEqual(result, 0)
+        bst_size_aft_del_node = bst.Count()
+        self.assertEqual(bst_size_aft_del_node, 0)
 
 
 if __name__ == "__main__":
