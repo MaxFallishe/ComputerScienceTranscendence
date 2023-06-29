@@ -340,7 +340,7 @@ class TestFindNodeByKey(unittest.TestCase):
 
 
 class TestAddKeyValue(unittest.TestCase):
-    def test_find_node_by_key__1(self):
+    def test_add_key_value__1(self):
         bst_mocks_generator = BSTMocksGeneratorType2()
         bst = bst_mocks_generator.generate_bst()
 
@@ -349,7 +349,7 @@ class TestAddKeyValue(unittest.TestCase):
         reference = 0.5
         self.assertEqual(result, reference)
 
-    def test_find_node_by_key__2(self):
+    def test_add_key_value__2(self):
         bst_mocks_generator = BSTMocksGeneratorType2()
         bst = bst_mocks_generator.generate_bst()
 
@@ -358,12 +358,32 @@ class TestAddKeyValue(unittest.TestCase):
         reference = 99
         self.assertEqual(result, reference)
 
-    def test_find_node_by_key__3(self):
+    def test_add_key_value__3(self):
         bst_mocks_generator = BSTMocksGeneratorType2()
         bst = bst_mocks_generator.generate_bst()
 
         result = bst.AddKeyValue(5, "new_node")
         self.assertFalse(result)
+
+    def test_add_key_value__4(self):
+        bst_mocks_generator = BSTMocksGeneratorType0()
+        bst = bst_mocks_generator.generate_bst()
+
+        bst.DeleteNodeByKey(1)
+        bst.AddKeyValue(10, "new_node")
+
+        self.assertEqual(bst.Count(), 1)
+        self.assertEqual(bst.Root.NodeKey, 10)
+
+    def test_add_key_value__5(self):
+        bst_mocks_generator = BSTMocksGeneratorType0()
+        bst = bst_mocks_generator.generate_bst()
+
+        bst.DeleteNodeByKey(1)
+        bst.AddKeyValue(-10, "new_node")
+
+        self.assertEqual(bst.Count(), 1)
+        self.assertEqual(bst.Root.NodeKey, -10)
 
 
 class TestFinMinMax(unittest.TestCase):
