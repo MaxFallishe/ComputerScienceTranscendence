@@ -49,7 +49,12 @@ class BST:
         bst_find = self.FindNodeByKey(key)
         if bst_find.NodeHasKey:
             return False
+
         bst_node = BSTNode(key, val, bst_find.Node)
+        if bst_find.Node is None:
+            self.Root = bst_node
+            return True
+
         if bst_find.ToLeft:
             bst_find.Node.LeftChild = bst_node
         if not bst_find.ToLeft:
