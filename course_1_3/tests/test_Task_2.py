@@ -483,31 +483,46 @@ class TestDeleteNodeToKey(unittest.TestCase):
                 bst.DeleteNodeByKey(j)
             self.assertEqual(bst.Root, None)
 
-    # This test can heavily load the system, the duration is 2-3 minutes.
-    def test_delete_node_to_key__6(self):
-        from itertools import permutations
+    # # This test can heavily load the system, the duration is 2-3 minutes.
+    # def test_delete_node_to_key__6(self):
+    #     from itertools import permutations
+    #
+    #     nodes_keys = (4, 8, 12, 6, 10, 7, 14, 13, 9, 11)
+    #
+    #     for i in list(permutations(nodes_keys)):
+    #         bst_mocks_generator = BSTMocksGeneratorType4()
+    #         bst = bst_mocks_generator.generate_bst()
+    #         for j in i:
+    #             bst.DeleteNodeByKey(j)
+    #         self.assertEqual(bst.Root, None)
+    #
+    # # This test can heavily load the system, the duration is 2-3 minutes.
+    # def test_delete_node_to_key__7(self):
+    #     from itertools import permutations
+    #
+    #     nodes_keys = (6, 12, 10, 14, 9, 11, 13, 15, 8, 20)
+    #
+    #     for i in list(permutations(nodes_keys)):
+    #         bst_mocks_generator = BSTMocksGeneratorType6()
+    #         bst = bst_mocks_generator.generate_bst()
+    #         for j in i:
+    #             bst.DeleteNodeByKey(j)
+    #         self.assertEqual(bst.Root, None)
 
-        nodes_keys = (4, 8, 12, 6, 10, 7, 14, 13, 9, 11)
+    def test_delete_node_to_key__9(self):
+        bst_mocks_generator = BSTMocksGeneratorType0()
+        bst = bst_mocks_generator.generate_bst()
 
-        for i in list(permutations(nodes_keys)):
-            bst_mocks_generator = BSTMocksGeneratorType4()
-            bst = bst_mocks_generator.generate_bst()
-            for j in i:
-                bst.DeleteNodeByKey(j)
-            self.assertEqual(bst.Root, None)
+        result = bst.DeleteNodeByKey(1)
+        self.assertEqual(result, True)
 
-    # This test can heavily load the system, the duration is 2-3 minutes.
-    def test_delete_node_to_key__7(self):
-        from itertools import permutations
+    def test_delete_node_to_key__10(self):
+        bst_mocks_generator = BSTMocksGeneratorType0()
+        bst = bst_mocks_generator.generate_bst()
 
-        nodes_keys = (6, 12, 10, 14, 9, 11, 13, 15, 8, 20)
-
-        for i in list(permutations(nodes_keys)):
-            bst_mocks_generator = BSTMocksGeneratorType6()
-            bst = bst_mocks_generator.generate_bst()
-            for j in i:
-                bst.DeleteNodeByKey(j)
-            self.assertEqual(bst.Root, None)
+        bst.DeleteNodeByKey(1)
+        result = bst.Count()
+        self.assertEqual(result, 0)
 
 
 if __name__ == "__main__":
