@@ -45,7 +45,6 @@ class BST:
             bst_find.ToLeft = True
             return bst_find
 
-
     def AddKeyValue(self, key, val):
         bst_find = self.FindNodeByKey(key)
         if bst_find.NodeHasKey:
@@ -66,74 +65,52 @@ class BST:
         if FromNode.RightChild is not None and FindMax is True:
             return self.FinMinMax(FromNode.RightChild, FindMax)
 
-
     def DeleteNodeByKey(self, key):
         bst_find = self.FindNodeByKey(key)
         if not bst_find.NodeHasKey:
             return False
-        # 1. Scenario - if leftChild = None or rightChild = None or both = None
-        if None in (bst_find.Node.LeftChild, bst_find.Node.RightChild):
-            new_node = bst_find.Node.LeftChild
-            if new_node is None:
-                new_node = bst_find.Node.RightChild
-            if bst_find.Node.Parent is None:
-                self.Root = new_node
-                if new_node is not None:
-                    new_node.Parent = None
-                return
-            if new_node is not None:
-                new_node.Parent = bst_find.Node.Parent
-            if bst_find.Node.Parent.LeftChild is bst_find.Node:
-                bst_find.Node.Parent.LeftChild = new_node
-            elif bst_find.Node.Parent.RightChild is bst_find.Node:
-                bst_find.Node.Parent.RightChild = new_node
+
+        if bst_find.Node.LeftChild and bst_find.Node.RightChild:
+            new_node = self.FinMinMax(bst_find.Node.RightChild, False)
+            bst_find.Node.NodeKey = new_node.NodeKey
+            bst_find.Node.NodeValue = new_node.NodeValue
+            # ### try to simplify it in future
+            if new_node is new_node.Parent.LeftChild:
+                new_node.Parent.LeftChild = new_node.RightChild
+            elif new_node is new_node.Parent.RightChild:
+                new_node.Parent.RightChild = new_node.RightChild
+            if new_node.RightChild:
+                new_node.RightChild.Parent = new_node.Parent
+            # ###
             return
 
-        # 2. Scenario if leftChild and rightChild != None And bst_find.Node.RightChild.LeftChild is None
-        if bst_find.Node.RightChild.LeftChild is None:
-            new_node = bst_find.Node.RightChild
-            bst_find.Node.LeftChild.Parent = new_node
-            new_node.LeftChild = bst_find.Node.LeftChild
-            if bst_find.Node.Parent is None:
-                self.Root = new_node
-                new_node.Parent = None
-                return
-            new_node.Parent = bst_find.Node.Parent
-            if bst_find.Node.Parent.LeftChild is bst_find.Node:
-                bst_find.Node.Parent.LeftChild = new_node
-            elif bst_find.Node.Parent.RightChild is bst_find.Node:
-                bst_find.Node.Parent.RightChild = new_node
+        successor_node = None
+        if bst_find.Node.LeftChild:
+            successor_node = bst_find.Node.LeftChild
+        elif bst_find.Node.RightChild:
+            successor_node = bst_find.Node.RightChild
+
+        if successor_node:
+            if successor_node.LeftChild:
+                successor_node.LeftChild.Parent = bst_find.Node
+            if successor_node.RightChild:
+                successor_node.RightChild.Parent = bst_find.Node
+            bst_find.Node.NodeKey = successor_node.NodeKey
+            bst_find.Node.NodeValue = successor_node.NodeValue
+            bst_find.Node.RightChild = successor_node.RightChild
+            bst_find.Node.LeftChild = successor_node.LeftChild
             return
-
-        # 3. Scenario if leftChild and rightChild != None And bst_find.Node.RightChild.LeftChild is None
-        new_node = self.FinMinMax(bst_find.Node.RightChild, False)
-        if new_node.RightChild is not None:
-            new_node.Parent.LeftChild = new_node.RightChild
-            new_node.RightChild.Parent = new_node.Parent
-        else:
-            if new_node.Parent.LeftChild is new_node:
-                new_node.Parent.LeftChild = None
-            elif new_node.Parent.RightChild is new_node:
-                new_node.Parent.RightChild = None
-
-        new_node.LeftChild = bst_find.Node.LeftChild
-        new_node.RightChild = bst_find.Node.RightChild
-        bst_find.Node.LeftChild.Parent = new_node
-        bst_find.Node.RightChild.Parent = new_node
 
         if bst_find.Node is self.Root:
-            self.Root = new_node
-            new_node.Parent = None
+            self.Root = None
             return
 
-        new_node.Parent = bst_find.Node.Parent
-
-        if bst_find.Node.Parent.LeftChild is bst_find.Node:
-            bst_find.Node.Parent.LeftChild = new_node
-        elif bst_find.Node.Parent.RightChild is bst_find.Node:
-            bst_find.Node.Parent.RightChild = new_node
-        return
-
+        # ### try to simplify it in future
+        if bst_find.Node is bst_find.Node.Parent.LeftChild:
+            bst_find.Node.Parent.LeftChild = None
+        elif bst_find.Node is bst_find.Node.Parent.RightChild:
+            bst_find.Node.Parent.RightChild = None
+        # ###
 
     def Count(self):
         return self.__count(self.Root)
@@ -146,8 +123,8 @@ class BST:
 
 def print_BST(node: BSTNode, count: int, node_type: str) -> None:
     if node is None:
-        print(count * '     ' + f'|{node_type} ' + "-", None)
+        print(count * "     " + f"|{node_type} " + "-", None)
         return
-    print(count * '     ' + f'|{node_type} ' + "-", node.NodeKey)
-    print_BST(node.LeftChild, count+1, 'l')
-    print_BST(node.RightChild, count+1, 'r')
+    print(count * "     " + f"|{node_type} " + "-", node.NodeKey)
+    print_BST(node.LeftChild, count + 1, "l")
+    print_BST(node.RightChild, count + 1, "r")
