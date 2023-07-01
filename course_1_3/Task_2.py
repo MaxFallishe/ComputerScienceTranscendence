@@ -76,16 +76,20 @@ class BST:
         if not bst_find.NodeHasKey:
             return False
 
+        new_node = None
         if bst_find.Node.LeftChild and bst_find.Node.RightChild:
             new_node = self.FinMinMax(bst_find.Node.RightChild, False)
             bst_find.Node.NodeKey = new_node.NodeKey
             bst_find.Node.NodeValue = new_node.NodeValue
-            if new_node is new_node.Parent.LeftChild:
-                new_node.Parent.LeftChild = new_node.RightChild
-            if new_node is new_node.Parent.RightChild:
-                new_node.Parent.RightChild = new_node.RightChild
-            if new_node.RightChild:
-                new_node.RightChild.Parent = new_node.Parent
+
+        if new_node and new_node is new_node.Parent.LeftChild:
+            new_node.Parent.LeftChild = new_node.RightChild
+        if new_node and new_node is new_node.Parent.RightChild:
+            new_node.Parent.RightChild = new_node.RightChild
+        if new_node and new_node.RightChild:
+            new_node.RightChild.Parent = new_node.Parent
+
+        if new_node:
             return True
 
         successor_node = None
@@ -93,12 +97,12 @@ class BST:
             successor_node = bst_find.Node.LeftChild
         if bst_find.Node.RightChild:
             successor_node = bst_find.Node.RightChild
+        if successor_node and successor_node.LeftChild:
+            successor_node.LeftChild.Parent = bst_find.Node
+        if successor_node and successor_node.RightChild:
+            successor_node.RightChild.Parent = bst_find.Node
 
         if successor_node:
-            if successor_node.LeftChild:
-                successor_node.LeftChild.Parent = bst_find.Node
-            if successor_node.RightChild:
-                successor_node.RightChild.Parent = bst_find.Node
             bst_find.Node.NodeKey = successor_node.NodeKey
             bst_find.Node.NodeValue = successor_node.NodeValue
             bst_find.Node.RightChild = successor_node.RightChild
