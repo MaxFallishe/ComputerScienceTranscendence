@@ -31,15 +31,15 @@ class BST:
             bst_find.Node = node
             bst_find.NodeHasKey = True
             return bst_find
-        elif node.NodeKey < key and node.RightChild is not None:
+        if node.NodeKey < key and node.RightChild is not None:
             return self.__find_node_by_key(key, node.RightChild)
-        elif node.NodeKey < key and node.RightChild is None:
+        if node.NodeKey < key and node.RightChild is None:
             bst_find = BSTFind()
             bst_find.Node = node
             return bst_find
-        elif node.NodeKey > key and node.LeftChild is not None:
+        if node.NodeKey > key and node.LeftChild is not None:
             return self.__find_node_by_key(key, node.LeftChild)
-        elif node.NodeKey > key and node.LeftChild is None:
+        if node.NodeKey > key and node.LeftChild is None:
             bst_find = BSTFind()
             bst_find.Node = node
             bst_find.ToLeft = True
@@ -80,20 +80,18 @@ class BST:
             new_node = self.FinMinMax(bst_find.Node.RightChild, False)
             bst_find.Node.NodeKey = new_node.NodeKey
             bst_find.Node.NodeValue = new_node.NodeValue
-            # ### try to simplify it in future
             if new_node is new_node.Parent.LeftChild:
                 new_node.Parent.LeftChild = new_node.RightChild
-            elif new_node is new_node.Parent.RightChild:
+            if new_node is new_node.Parent.RightChild:
                 new_node.Parent.RightChild = new_node.RightChild
             if new_node.RightChild:
                 new_node.RightChild.Parent = new_node.Parent
-            # ###
             return True
 
         successor_node = None
         if bst_find.Node.LeftChild:
             successor_node = bst_find.Node.LeftChild
-        elif bst_find.Node.RightChild:
+        if bst_find.Node.RightChild:
             successor_node = bst_find.Node.RightChild
 
         if successor_node:
@@ -111,13 +109,11 @@ class BST:
             self.Root = None
             return True
 
-        # ### try to simplify it in future
         if bst_find.Node is bst_find.Node.Parent.LeftChild:
             bst_find.Node.Parent.LeftChild = None
-        elif bst_find.Node is bst_find.Node.Parent.RightChild:
+        if bst_find.Node is bst_find.Node.Parent.RightChild:
             bst_find.Node.Parent.RightChild = None
         return True
-        # ###
 
     def Count(self):
         return self.__count(self.Root)
