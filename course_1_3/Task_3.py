@@ -31,15 +31,15 @@ class BST:
             bst_find.Node = node
             bst_find.NodeHasKey = True
             return bst_find
-        if node.NodeKey < key and node.RightChild is not None:
+        if node.NodeKey < key and node.RightChild:
             return self.__find_node_by_key(key, node.RightChild)
-        if node.NodeKey < key and node.RightChild is None:
+        if node.NodeKey < key and not node.RightChild:
             bst_find = BSTFind()
             bst_find.Node = node
             return bst_find
-        if node.NodeKey > key and node.LeftChild is not None:
+        if node.NodeKey > key and node.LeftChild:
             return self.__find_node_by_key(key, node.LeftChild)
-        if node.NodeKey > key and node.LeftChild is None:
+        if node.NodeKey > key and not node.LeftChild:
             bst_find = BSTFind()
             bst_find.Node = node
             bst_find.ToLeft = True
