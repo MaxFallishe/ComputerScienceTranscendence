@@ -80,20 +80,18 @@ class BST:
             new_node = self.FinMinMax(bst_find.Node.RightChild, False)
             bst_find.Node.NodeKey = new_node.NodeKey
             bst_find.Node.NodeValue = new_node.NodeValue
-            # ### try to simplify it in future
             if new_node is new_node.Parent.LeftChild:
                 new_node.Parent.LeftChild = new_node.RightChild
-            elif new_node is new_node.Parent.RightChild:
+            if new_node is new_node.Parent.RightChild:
                 new_node.Parent.RightChild = new_node.RightChild
             if new_node.RightChild:
                 new_node.RightChild.Parent = new_node.Parent
-            # ###
             return True
 
         successor_node = None
         if bst_find.Node.LeftChild:
             successor_node = bst_find.Node.LeftChild
-        elif bst_find.Node.RightChild:
+        if bst_find.Node.RightChild:
             successor_node = bst_find.Node.RightChild
 
         if successor_node:
@@ -111,13 +109,11 @@ class BST:
             self.Root = None
             return True
 
-        # ### try to simplify it in future
         if bst_find.Node is bst_find.Node.Parent.LeftChild:
             bst_find.Node.Parent.LeftChild = None
-        elif bst_find.Node is bst_find.Node.Parent.RightChild:
+        if bst_find.Node is bst_find.Node.Parent.RightChild:
             bst_find.Node.Parent.RightChild = None
         return True
-        # ###
 
     def Count(self):
         return self.__count(self.Root)
