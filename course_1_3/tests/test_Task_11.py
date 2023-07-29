@@ -189,8 +189,6 @@ class TestAddVertex(unittest.TestCase):
         self.assertEqual(reference, result)
 
 
-
-
 class TestRemoveVertex(unittest.TestCase):
     def test_remove_vertex__1(self):
         graph = SimpleGraph(5)
@@ -301,7 +299,6 @@ class TestAddEdge(unittest.TestCase):
         graph.AddEdge(0, 1)
         result = graph.m_adjacency[1][0]
         self.assertEqual(1, result)
-
 
     def test_add_edge__3(self):
         graph = SimpleGraph(5)

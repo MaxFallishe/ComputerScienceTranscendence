@@ -41,7 +41,9 @@ class SimpleGraph:
         if self.vertex[VFrom] is None or self.vertex[VTo] is None:
             return []
         path_to_vertex = []
-        init_deq = deque([[VFrom, path_to_vertex]])  # create dataclass would be much better
+        init_deq = deque(
+            [[VFrom, path_to_vertex]]
+        )  # create dataclass would be much better
         return self.__breadth_first_search(VTo, init_deq)
 
     def __breadth_first_search(self, v_to: int, deq: deque) -> list:
