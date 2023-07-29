@@ -79,6 +79,40 @@ class GraphMocksGeneratorType2(GraphMocksGenerator):
         return graph
 
 
+class GraphMocksGeneratorType3(GraphMocksGenerator):
+    """
+    Сonnected undirected graph object with following structure:
+                0 - 1 - 4
+                |     /
+            7 - 2 - 3
+            |   |  /
+            6 - 5
+    """
+
+    def generate_graph(self) -> SimpleGraph:
+        graph = SimpleGraph(10)
+        graph.AddVertex(0)
+        graph.AddVertex(1)
+        graph.AddVertex(2)
+        graph.AddVertex(3)
+        graph.AddVertex(4)
+        graph.AddVertex(5)
+        graph.AddVertex(6)
+        graph.AddVertex(7)
+
+        graph.AddEdge(0, 1)
+        graph.AddEdge(0, 2)
+        graph.AddEdge(1, 4)
+        graph.AddEdge(2, 3)
+        graph.AddEdge(2, 5)
+        graph.AddEdge(2, 7)
+        graph.AddEdge(3, 4)
+        graph.AddEdge(3, 5)
+        graph.AddEdge(5, 6)
+        graph.AddEdge(6, 7)
+        return graph
+
+
 class TestAddVertex(unittest.TestCase):
     def test_add_vertex__1(self):
         graph = SimpleGraph(0)
@@ -428,3 +462,21 @@ class TestBreadthFirstSearch(unittest.TestCase):
         graph = graph_mocks_generator.generate_graph()
         result = [i.Value for i in graph.BreadthFirstSearch(0, 1)]
         self.assertEqual(result, [0, 4, 1])
+
+    def test_breadth_first_search__16(self):
+        """
+        Reproducing
+        <Error or failed test:
+        An existing path from a single edge is not found>
+
+        On the graph with the following structure:
+                    0 - 1 - 4
+                    |     /
+                7 - 2 - 3
+                |   |  /
+                6 - 5
+        """
+        graph_mocks_generator = GraphMocksGeneratorType3()
+        graph = graph_mocks_generator.generate_graph()
+        result = [i.Value for i in graph.BreadthFirstSearch(7, 6)]
+        self.assertEqual(result, [7, 6])
