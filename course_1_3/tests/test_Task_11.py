@@ -124,7 +124,7 @@ class GraphMocksGeneratorType4(GraphMocksGenerator):
     """
 
     def generate_graph(self) -> SimpleGraph:
-        graph = SimpleGraph(10)
+        graph = SimpleGraph(6)
         graph.AddVertex(0)  # A
         graph.AddVertex(1)  # B
         graph.AddVertex(2)  # C
