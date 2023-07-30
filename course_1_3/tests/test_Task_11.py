@@ -116,7 +116,7 @@ class GraphMocksGeneratorType3(GraphMocksGenerator):
 class GraphMocksGeneratorType4(GraphMocksGenerator):
     """
     Сonnected undirected graph object with following structure:
-                0 - 1 - 4
+                0 - 1 - 4 - 5
                 | \ |  /
                 2 - 3
                    /\
@@ -517,7 +517,7 @@ class TestBreadthFirstSearch(unittest.TestCase):
         An existing path from a single edge is not found>
 
         On the graph with the following structure:
-                0 - 1 - 4
+                0 - 1 - 4 - 5
                 | \ |  /
                 2 - 3
                    /\
