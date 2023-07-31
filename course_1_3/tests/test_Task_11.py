@@ -525,5 +525,6 @@ class TestBreadthFirstSearch(unittest.TestCase):
         """
         graph_mocks_generator = GraphMocksGeneratorType4()
         graph = graph_mocks_generator.generate_graph()
+        graph.BreadthFirstSearch(0, 4)
         result = [i.Value for i in graph.BreadthFirstSearch(3, 0)]
         self.assertEqual(result, [3, 0])

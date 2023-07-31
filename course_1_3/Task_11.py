@@ -38,6 +38,7 @@ class SimpleGraph:
         self.m_adjacency[v2][v1] = 0
 
     def BreadthFirstSearch(self, VFrom, VTo):
+        self.__mark_all_vertices_as_unvisited()
         if self.vertex[VFrom] is None or self.vertex[VTo] is None:
             return []
         path_to_vertex = []
@@ -45,6 +46,11 @@ class SimpleGraph:
             [[VFrom, path_to_vertex]]
         )  # create dataclass would be much better
         return self.__breadth_first_search(VTo, init_deq)
+
+    def __mark_all_vertices_as_unvisited(self):
+        for i in self.vertex:
+            if i:
+                i.Hit = False
 
     def __breadth_first_search(self, v_to: int, deq: deque) -> list:
         if not deq:
