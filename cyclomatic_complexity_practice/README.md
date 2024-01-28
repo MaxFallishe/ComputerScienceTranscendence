@@ -389,6 +389,94 @@ def save_data(item: dict) -> None:
     print(f"write {path}")  
 ```
 ## Пример №3
+В данном примере был пеобразован метод `list_pull_store` который использовался для сохранения данных посредством батчей, с большим количеством внутренних счетчиков. После рефакторинга от излишних флагов и счетчиков удалось избавиться, кроме того, обработка данных была переведена на систему из итераторов и единого `reduce` счетчика/обработчика.
+
+**Цикломатическая сложность ДО и ПОСЛЕ:**
+```
+ДО:
+M 1:0 list_pull_store - B (10)
+
+
+ПОСЛЕ:
+M 8:4 list_pull_store.get_info_iterator - A (4)
+F 20:4 list_pull_store.store_nd_count - A (3)
+F 4:0 list_pull_store - A (1)
+```
+
+**ДО:**
+```python
+def list_pull_store(self, stid, t_count, t_type, out_dir, overwrite='STOP'):  
+    total_count = 0  
+    fetch_count = t_count  
+    if t_count == 0:  
+        fetch_count = 100  
+  
+    while True:  
+        stored_count = 0  
+        iter_count = 0  
+        info = None  
+        for info in self.list_info(stid, fetch_count, t_type):  
+            iter_count += 1  
+            logger.debug('Process: %s', info)  
+            key_type = info['key'].split(' ')[0]  
+            if key_type not in self._telemetry_key_types:  
+                logger.debug('Unsupported key type "%s", id:"%s". skip',  
+                             key_type, info['id'])  
+                continue  
+            try:  
+                stored_count += self.store(info, out_dir, overwrite)  
+            except OverwriteStopError as e:  
+                logger.warning(e)  
+                return total_count  
+        else:  
+            if info is None:  
+                break  
+            logger.debug('Check next bunch, t_count:%s, iter_count:%s, tid:%s',  
+                         t_count, iter_count, info['id'])  
+            if t_count == 0:  
+                if iter_count == 0:  
+                    break  
+                stid = info['id'] + 1  
+        total_count += stored_count  
+  
+    return total_count
+```
+
+**ПОСЛЕ:**
+```python
+from functools import reduce  
+  
+  
+def list_pull_store(self, stid, t_count: int, t_type, out_dir, overwrite='STOP'):  
+    is_tcount = bool(t_count)  
+    fetch_count = t_count * is_tcount + 100 * (not is_tcount)  
+  
+    def get_info_iterator(curr_id):  
+        while True:  
+            info = None  
+  
+            for info in self.list_info(curr_id, fetch_count, t_type):  
+                yield info  
+            curr_id = info['id'] + 1  
+            logger.debug('Check next bunch, t_count:%s, iter_count:%s, tid:%s',  
+                         t_count, info['id'])  
+            if info is None:  
+                break  
+  
+    def store_nd_count(counter, info_unit):  
+        key_type = info_unit['key'].split(' ')[0]  
+        if key_type not in self._telemetry_key_types:  
+            logger.debug('Unsupported key type "%s", id:"%s". skip', key_type, info_unit['id'])  
+            return counter + 0  
+        try:  
+            return counter + self.store(info_unit, out_dir, overwrite)  
+        except OverwriteStopError as e:  
+            logger.warning(e)  
+            return counter + 0  
+  
+    info_list = get_info_iterator(stid)  
+    return reduce(store_nd_count, info_list, 0)
+```
 
 # Заключение
 Главные выводы которые можно вынести по теме Цикломатической сложности, таковы:
