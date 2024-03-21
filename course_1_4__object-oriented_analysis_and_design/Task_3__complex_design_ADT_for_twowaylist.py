@@ -77,21 +77,21 @@ class ParentList[T]:
         self.__tail_node = None
         self.pointer = None
 
-        self.addtoempty_status = self.ADDTOEMPTY_NIL
-        self.head_status = self.HEAD_NIL
-        self.tail_status = self.TAIL_NIL
-        self.right_status = self.RIGHT_NIL
-        self.put_right_status = self.PUTRIGHT_NIL
-        self.put_left_status = self.PUTLEFT_NIL
-        self.remove_status = self.REMOVE_NIL
-        self.replace_status = self.REPLACE_NIL
-        self.find_status = self.FIND_NIL
-        self.get_status = self.GET_NIL
-        self.is_head_status = self.ISHEAD_NIL
-        self.is_tail_status = self.ISTAIL_NIL
-        self.is_value_status = self.ISVALUE_NIL
-        self.add_tail_status = self.ADDTAIL_NIL
-        self.remove_all_status = self.REMOVEALL_NIL
+        self.__addtoempty_status = self.ADDTOEMPTY_NIL
+        self.__head_status = self.HEAD_NIL
+        self.__tail_status = self.TAIL_NIL
+        self.__right_status = self.RIGHT_NIL
+        self.__put_right_status = self.PUTRIGHT_NIL
+        self.__put_left_status = self.PUTLEFT_NIL
+        self.__remove_status = self.REMOVE_NIL
+        self.__replace_status = self.REPLACE_NIL
+        self.__find_status = self.FIND_NIL
+        self.__get_status = self.GET_NIL
+        self.__is_head_status = self.ISHEAD_NIL
+        self.__is_tail_status = self.ISTAIL_NIL
+        self.__is_value_status = self.ISVALUE_NIL
+        self.__add_tail_status = self.ADDTAIL_NIL
+        self.__remove_all_status = self.REMOVEALL_NIL
 
     # КОМАНДЫ:
 
@@ -99,7 +99,7 @@ class ParentList[T]:
     # постусловие: указатель установлен на первый узел
     def head(self) -> None:
         if self.get_addtoempty_status() == self.ADDTOEMPTY_NIL:
-            self.head_status = self.HEAD_ERR
+            self.__head_status = self.HEAD_ERR
             return
         self.pointer = self.__head_node
 
@@ -107,7 +107,7 @@ class ParentList[T]:
     # постусловие: указатель установлен на последний узел
     def tail(self) -> None:
         if self.get_addtoempty_status() == self.ADDTOEMPTY_NIL:
-            self.tail_status = self.TAIL_ERR
+            self.__tail_status = self.TAIL_ERR
             return
         self.pointer = self.__tail_node
 
@@ -115,35 +115,35 @@ class ParentList[T]:
     # постусловие: указатель установлен на правый ближайший узел от исходного
     def right(self) -> None:
         if self.get_addtoempty_status() == self.ADDTOEMPTY_NIL:
-            self.right_status = self.RIGHT_ERR
+            self.__right_status = self.RIGHT_ERR
             return
         if self.pointer.right is None:
-            self.right_status = self.RIGHT_EMPTY
+            self.__right_status = self.RIGHT_EMPTY
             return
         self.pointer = self.pointer.right
-        self.right_status = self.RIGHT_OK
+        self.__right_status = self.RIGHT_OK
 
     # предусловие: в списке есть хотя бы один узел, указатель установлен на какой-либо узел
     # постусловие: справа текущий узел теперь соединен с новым (добавленным) узлом, новый узел соединен с "прошлым" правым узлом текущего узла
     def put_right(self, value: T) -> None:
         if self.get_addtoempty_status() == self.ADDTOEMPTY_NIL:
-            self.put_right_status = self.PUTRIGHT_ERR
+            self.__put_right_status = self.PUTRIGHT_ERR
             return
         new_node = self.__Node()
         new_node.value = value
         new_node.left, new_node.right = self.pointer, self.pointer.right
         if self.pointer.right is not None:
-            self.pointer.rihgt.left = new_node
+            self.pointer.right.left = new_node
         if self.pointer.right is None:
             self.__tail_node = new_node
         self.pointer.right = new_node
-        self.put_right_status = self.PUTRIGHT_OK
+        self.__put_right_status = self.PUTRIGHT_OK
 
     # предусловие: в списке есть хотя бы один узел, указатель установлен на какой-либо узел
     # постусловие: слева текущий узел теперь соединен с новым (добавленным) узлом, новый узел соединен с "прошлым" левым узлом текущего узла
     def put_left(self, value: T) -> None:
         if self.get_addtoempty_status() == self.ADDTOEMPTY_NIL:
-            self.put_left_status = self.PUTLEFT_ERR
+            self.__put_left_status = self.PUTLEFT_ERR
             return
         new_node = self.__Node()
         new_node.value = value
@@ -153,7 +153,7 @@ class ParentList[T]:
         if self.pointer.left is None:
             self.__head_node = new_node
         self.pointer.left = new_node
-        self.put_left_status = self.PUTLEFT_OK
+        self.__put_left_status = self.PUTLEFT_OK
 
     # предусловие: в списке есть хотя бы один узел, указатель установлен на какой-либо узел,
     # постусловие: текущий узел удаляется, курсор смещается к правому соседу, если он есть, в противном случае курсор смещается к левому соседу, если он есть
@@ -177,69 +177,71 @@ class ParentList[T]:
         self.pointer = None
         self.__head_node = None
         self.__tail_node = None
-        self.addtoempty_status = self.ADDTOEMPTY_NIL
+        self.__addtoempty_status = self.ADDTOEMPTY_NIL
 
     # предусловие: указатель не установлен не на один из узлов
     # постусловие: добавлен новый узел, указатель установлен на нем
     def add_to_empty(self) -> None:
-        if self.addtoempty_status == self.ADDTOEMPTY_NIL:
+        if self.__addtoempty_status == self.ADDTOEMPTY_NIL:
             new_empty_node = self.__Node()
             self.__head_node = new_empty_node
             self.__tail_node = new_empty_node
             self.pointer = new_empty_node
-            self.addtoempty_status = self.ADDTOEMPTY_OK
+            self.__addtoempty_status = self.ADDTOEMPTY_OK
             return
-        self.addtoempty_status = self.ADDTOEMPTY_ERR
+        self.__addtoempty_status = self.ADDTOEMPTY_ERR
 
     # постусловие: добавлен новый узел в хвост списка, если до этого не было узлов в списке - теперь указаиель установлен на добавленном узле
     def add_tail(self, value: T) -> None:
         if self.get_addtoempty_status() == self.ADDTOEMPTY_NIL:
-            self.put_left_status = self.ADDTAIL_ERR
+            self.__put_left_status = self.ADDTAIL_ERR
             return
         new_node = self.__Node()
         new_node.value = value
         self.__tail_node.right = new_node
         new_node.left = self.__tail_node
         self.__tail_node = new_node
-        self.put_left_status = self.ADDTAIL_OK
+        self.__put_left_status = self.ADDTAIL_OK
 
     # предусловие: указатель установлен на один из узлов
     # постусловие: значение текущего узла изменено
     def replace(self, value: T) -> None:
         if self.get_addtoempty_status() == self.ADDTOEMPTY_NIL:
-            self.replace_status = self.REPLACE_ERR
+            self.__replace_status = self.REPLACE_ERR
             return
         self.pointer.value = value
-        self.replace_status = self.REPLACE_OK
+        self.__replace_status = self.REPLACE_OK
 
     # предусловие: указатель установлен на один из узлов
     # постусловие: указатель установлен на узел с искомым значением (правее от исходного)
     def find(self, value: T) -> None:
         if self.get_addtoempty_status() == self.ADDTOEMPTY_NIL:
-            self.find_status = self.FIND_ERR
+            self.__find_status = self.FIND_ERR
             return
         while self.pointer.right is not None:
             self.pointer = self.pointer.right
             if self.pointer.value == value:
                 return
-        self.find_status = self.FIND_NOTFOUND
+        self.__find_status = self.FIND_NOTFOUND
 
-    # постусловие: все узлы с искомым значением удалены из списка, указатель установлен на последний лемент в списке
+    # постусловие: все узлы с искомым значением удалены из списка, указатель установлен на последний элемент в списке
     def remove_all(self, value: T) -> None:
         if self.get_addtoempty_status() == self.ADDTOEMPTY_NIL:
-            self.remove_all_status = self.REMOVEALL_ERR
+            self.__remove_all_status = self.REMOVEALL_ERR
             return
-        while self.pointer is not None:
+        self.head()
+        while True:
             self.find(value)
-            if self.pointer.get() == value:
-                self.remove()
+            if self.__find_status == self.FIND_NOTFOUND:
+                return
+            self.remove()
 
     # ЗАПРОСЫ:
 
     # предусловие: указатель установлен на один из узлов
     def get(self) -> T:
-        if self.addtoempty_status == self.ADDTOEMPTY_NIL:
-            self.find_status = self.FIND_ERR
+        if self.__addtoempty_status == self.ADDTOEMPTY_NIL:
+            self.__get_status = self.GET_ERR
             return
         return self.pointer.value
 
@@ -255,34 +257,34 @@ class ParentList[T]:
 
     # предусловие: указатель установлен на один из узлов
     def is_head(self) -> bool | None:
-        if self.addtoempty_status == self.ADDTOEMPTY_NIL:
-            self.is_head_status = self.ISHEAD_ERR
+        if self.__addtoempty_status == self.ADDTOEMPTY_NIL:
+            self.__is_head_status = self.ISHEAD_ERR
             return
-        self.is_head_status = self.ISHEAD_OK
+        self.__is_head_status = self.ISHEAD_OK
         return self.pointer is self.__head_node
 
     # предусловие: указатель установлен на один из узлов
     def is_tail(self) -> bool | None:
-        if self.addtoempty_status == self.ADDTOEMPTY_NIL:
-            self.is_tail_status = self.ISTAIL_ERR
+        if self.__addtoempty_status == self.ADDTOEMPTY_NIL:
+            self.__is_tail_status = self.ISTAIL_ERR
             return
-        self.is_tail_status = self.ISTAIL_OK
+        self.__is_tail_status = self.ISTAIL_OK
         return self.pointer is self.__tail_node
 
     # предусловие: указатель установлен на один из узлов
     def is_value(self) -> bool | None:
-        if self.addtoempty_status == self.ADDTOEMPTY_NIL:
-            self.is_value_status = self.ISVALUE_ERR
+        if self.__addtoempty_status == self.ADDTOEMPTY_NIL:
+            self.__is_value_status = self.ISVALUE_ERR
             return
-        self.is_value_status = self.ISVALUE_OK
+        self.__is_value_status = self.ISVALUE_OK
         return self.pointer is not None
 
     # СТАТУСЫ КОММАНД
     def get_addtoempty_status(self) -> int:
-        return self.addtoempty_status
+        return self.__addtoempty_status
 
     def get_find_status(self) -> int:
-        return self.find_status
+        return self.__find_status
 
 
 class LinkedList[T](ParentList):
