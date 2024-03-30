@@ -1,5 +1,5 @@
 import unittest
-from ..Task_4__design_and_impement_ADT_for_dynarray import DynArray
+from course_1_4__object_oriented_analysis_and_design.Task_4__design_and_impement_ADT_for_dynarray import DynArray
 
 
 class TestDynArrayAppendOperation(unittest.TestCase):

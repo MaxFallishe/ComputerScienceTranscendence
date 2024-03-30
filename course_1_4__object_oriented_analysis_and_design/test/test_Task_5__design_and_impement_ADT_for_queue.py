@@ -1,5 +1,5 @@
 import unittest
-from ..Task_5__design_and_impement_ADT_for_queue import Queue
+from course_1_4__object_oriented_analysis_and_design.Task_5__design_and_impement_ADT_for_queue import Queue
 
 
 class TestQueueAppendOperation(unittest.TestCase):

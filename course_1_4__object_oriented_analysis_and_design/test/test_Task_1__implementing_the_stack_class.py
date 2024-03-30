@@ -1,6 +1,5 @@
 import unittest
-from ..Task_1__implementing_the_stack_class import BoundedStack
-
+from course_1_4__object_oriented_analysis_and_design.Task_1__implementing_the_stack_class import BoundedStack
 
 
 class TestPushOperation(unittest.TestCase):

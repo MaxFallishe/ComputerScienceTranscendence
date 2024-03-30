@@ -1,5 +1,5 @@
 import unittest
-from ..Task_2__design_ADT_for_linked_list import LinkedList
+from course_1_4__object_oriented_analysis_and_design.Task_2__design_ADT_for_linked_list import LinkedList
 
 
 class TestHeadOperation(unittest.TestCase):

@@ -1,5 +1,5 @@
 import unittest
-from ..Task_3__complex_design_ADT_for_twowaylist import ParentList, LinkedList, TwoWayList
+from course_1_4__object_oriented_analysis_and_design.Task_3__complex_design_ADT_for_twowaylist import ParentList, LinkedList, TwoWayList
 
 
 class TestLinkedListAddToEmptyOperation(unittest.TestCase):
