@@ -14,7 +14,7 @@ class HashTable[T]:
         self.max_size = max_size
         self._slots = [None] * max_size
         self.size = 0
-        self.STEP = 2 if self.max_size % 3 == 0 else 3   # TODO  1 2 3 4 5 6 7 8 9 10
+        self.STEP = 2 if self.max_size % 3 == 0 else 3
 
         self.__put_status = self.PUT_NIL
         self.__delete_status = self.DELETE_NIL
