@@ -116,7 +116,7 @@ class PowerSet[T](HashTable):
 
     # ЗАПРОСЫ:
     def difference(self, set_: Self) -> Self:
-        diff_set = PowerSet(self.max_size)
+        diff_set = PowerSet(self.max_size * 2)
         for i in self._slots:
             if i is None:
                 continue
