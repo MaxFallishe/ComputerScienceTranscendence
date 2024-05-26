@@ -1,5 +1,5 @@
 import unittest
-from course_1_5__inheritance_composition_polymorphism.Task_13
+import course_1_5__inheritance_composition_polymorphism.Task_13__hide_methods_in_inherited_structures
 
 
 class TestGeneral(unittest.TestCase):
