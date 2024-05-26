@@ -28,7 +28,7 @@ class TestVector(unittest.TestCase):
         self.assertEqual(self.b[0], 2)
 
     def test_str_method(self):
-        self.assertEqual(str(self.a), "[1, 11, 30, 1]")  # Check if str() method returns the correct string
+        self.assertEqual(str(self.a), "[1, 11, 30, 1]")
 
 
 if __name__ == '__main__':
