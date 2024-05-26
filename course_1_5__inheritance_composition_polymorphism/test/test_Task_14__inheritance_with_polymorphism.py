@@ -3,7 +3,6 @@ from course_1_5__inheritance_composition_polymorphism.Task_14__inheritance_with_
 
 
 class TestVector(unittest.TestCase):
-
     def setUp(self):
         self.a = Vector([1, 11, 30, 1])
         self.b = Vector([2, 11, 1, 1])

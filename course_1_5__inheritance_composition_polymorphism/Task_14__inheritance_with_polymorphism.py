@@ -81,6 +81,9 @@ class Any[T](General):
     pass
 
 
+# In this example of the Vector class implementation, it is forbidden to add elements of different types inside
+# vectors during their addition, however, theoretically it is possible to allow the addition of all numeric types
+# inside a vector or implement conversion to string objects.
 class Vector[T](Any):
     def __init__(self, nums: list[int | Self]):
         super().__init__()
@@ -101,16 +104,3 @@ class Vector[T](Any):
 
     def __str__(self) -> str:
         return str(self.nums_arr)
-
-
-# a = Vector([1, 11, 30, 1])
-# b = Vector([2, 11, 1, 1])
-# c = Vector([3, 11, 30, 1])
-# v = Vector([4, 11, 1, 1])
-#
-# f = Vector([a, b])
-# g = Vector([c, v])
-#
-# cc = f + g
-# vv = cc + cc
-# print(vv[0])
