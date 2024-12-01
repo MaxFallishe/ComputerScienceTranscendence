@@ -32,4 +32,4 @@ def wrap_html_tag(tag_name: str, classes: dict, value: str) -> str | Callable:
     return tag_template.format(tag_name=tag_name, value=value, classes=formatted_classes)
 
 
-print(wrap_html_tag('li', {'class': 'list-group', 'onClick': 'actionX'}, 'item 23'))
+print(wrap_html_tag('li', {'class': 'list-group', 'onClick': 'actionX'}, 'item 23'))  # Output: <li class="list-group" onClick="actionX">item 23</li>
