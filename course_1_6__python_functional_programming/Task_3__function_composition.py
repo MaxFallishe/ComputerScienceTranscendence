@@ -7,6 +7,7 @@ from pymonad.tools import curry
 # The tag() partial application function, which receives two string parameters as input: the name of the HTML tag,
 # and the value. This function wraps the value with a tag, taking into account the opening and closing tag,
 # for example: tag('b', 'string') # <b>string</b>
+# Based on the tag, we will prepare two functions bold and italic, which wrap the value in tags b and i.
 @curry(2)
 def wrap_tag(tag_name: str, value: str) -> str | Callable:
     template = '<{tag_name}>{value}</{tag_name}>'
@@ -15,6 +16,20 @@ def wrap_tag(tag_name: str, value: str) -> str | Callable:
 
 prep_tag = wrap_tag('a')
 print(prep_tag('text'))  # Output: <a>text</a>
+
+
+def wrap_tag_as_italic(value: str) -> str:
+    prewrap = wrap_tag('i')
+    return prewrap(value)
+
+
+def wrap_tag_as_bold(value: str) -> str:
+    prewrap = wrap_tag('b')
+    return prewrap(value)
+
+
+print(wrap_tag_as_italic('some text'))  # Output: <i>some text</i>
+print(wrap_tag_as_bold('some text'))  # Output: <b>some text</b>
 
 
 # Let's extend the tag function with the third attr parameter (dictionary type), which adds a set of properties
