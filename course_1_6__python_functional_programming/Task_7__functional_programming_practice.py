@@ -21,15 +21,13 @@
 from collections import Counter
 from functools import reduce
 
-from pymonad.operators.list import ListMonad
-from pymonad.operators.maybe import Just, Nothing, Maybe
-from pymonad.operators.state import State
+from pymonad.operators.maybe import Just
 from pymonad.tools import curry
 
 
-def ConquestCampaign(N: int, M: int, L: int, batallion) -> int:
+def ConquestCampaign(N: int, M: int, L: int, batallion: Just) -> int:
     if batallion.bind(is_conquered(N, M)):
-        return 0
+        return 1
     batallion = (
         batallion
         .bind(stright_expansion)
@@ -53,7 +51,7 @@ def is_conquered(N: int, M: int, batallion: list[int]) -> bool:
 
 
 @curry(1)
-def get_batallion_without_duplicates(batallion: list[int]) -> list[int]:
+def get_batallion_without_duplicates(batallion: list[int]) -> Just:
     odd_coordinates = batallion[0::2]
     even_coordinates = batallion[1::2]
     zipped_coordinates = list(zip(odd_coordinates, even_coordinates))
@@ -63,7 +61,7 @@ def get_batallion_without_duplicates(batallion: list[int]) -> list[int]:
 
 
 @curry(3)
-def get_batallion_within_borderd(N: int, M: int, batallion: list[int]) -> list[int]:
+def get_batallion_within_borderd(N: int, M: int, batallion: list[int]) -> Just:
     odd_coordinates = batallion[0::2]
     even_coordinates = batallion[1::2]
     zipped_coordinates = list(zip(odd_coordinates, even_coordinates))
@@ -73,15 +71,16 @@ def get_batallion_within_borderd(N: int, M: int, batallion: list[int]) -> list[i
 
 
 @curry(1)
-def stright_expansion(batallion: list[int]) -> list[int]:
+def stright_expansion(batallion: list[int]) -> Just:
     odd_coordinates = batallion[0::2]
     even_coordinates = batallion[1::2]
     zipped_coordinates = list(zip(odd_coordinates, even_coordinates))
     expansioned_batallion = map(
-        lambda x: [x[0], x[1], x[0] + 1, x[1] + 1, x[0] + 1, x[1] - 1, x[0] - 1, x[1] + 1, x[0] - 1, x[1] - 1],
+        lambda x: [x[0] + 0, x[1] + 0,
+                   x[0] + 1, x[1] + 0,
+                   x[0] - 1, x[1] + 0,
+                   x[0] + 0, x[1] + 1,
+                   x[0] + 0, x[1] - 1],
         zipped_coordinates)
     result_batallion = list(reduce(lambda x, y: x + y, expansioned_batallion))
     return Just(result_batallion)
-
-
-ConquestCampaign(N=3, M=4, L=2, batallion=Just([2, 2, 3, 4]))  # Output: 3
