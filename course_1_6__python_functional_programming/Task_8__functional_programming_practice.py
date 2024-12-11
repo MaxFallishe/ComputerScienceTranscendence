@@ -7,7 +7,7 @@ def get_second_biggest_number(seq: list[int]) -> int:
     if len(seq) <= 1:
         return None
 
-    def xxx(x, y):
+    def gen_maxduo_lst(x, y):
         if not isinstance(x, list):
             x = [x]
         max_duo = x + [y]
@@ -18,5 +18,5 @@ def get_second_biggest_number(seq: list[int]) -> int:
             max_duo.remove(min_value)
         return max_duo
 
-    res_duo = reduce(xxx, seq)
+    res_duo = reduce(gen_maxduo_lst, seq)
     return res_duo[0] if res_duo[0] < res_duo[1] else res_duo[1]
