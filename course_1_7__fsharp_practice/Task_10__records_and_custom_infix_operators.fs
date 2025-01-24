@@ -9,3 +9,8 @@ let (.>.) x y =
             x.hours > y.hours
         else
             x.minutes > y.minutes
+
+// Another option
+// type TimeOfDay = { hours: int; minutes: int; f: string }
+// let (.>.) x y =
+//     (x.f, x.hours, x.minutes) > (y.f, y.hours, y.minutes)
