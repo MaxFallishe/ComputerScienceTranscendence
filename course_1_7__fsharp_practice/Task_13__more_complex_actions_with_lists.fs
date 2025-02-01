@@ -13,7 +13,6 @@ let rec lmodd = function
 // 39.2
 let rec del_even = function
     | [ ] -> []
-    | [_] -> []
     | head1 :: tail when head1 % 2 = 0 -> [] @ del_even tail
     | head1 :: tail -> [head1] @ del_even tail
 
@@ -29,7 +28,6 @@ let rec multiplicity x xs =
 // 39.4
 let rec split = function
     | xs -> lmodd xs, rmodd xs
-
 
 
 // 39.5
