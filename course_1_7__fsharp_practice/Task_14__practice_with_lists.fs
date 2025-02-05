@@ -44,7 +44,7 @@ let rec minus (xs1, xs2) : int list =  // [x1; x2; ...; xn] has logic for elemen
     | xs1, [] -> xs1
     | [], xs2 -> []
     | head1 :: xs1, head2 :: xs2 when head1 < head2 -> [head1] @ minus(xs1, [head2] @ xs2 )
-    | head1 :: xs1, head2 :: xs2 when head1 = head2 -> [] @ minus(xs1, [head2] @ xs2)
+    | head1 :: xs1, head2 :: xs2 when head1 = head2 -> [] @ minus(xs1, xs2)
     | head1 :: xs1, head2 :: xs2 when head1 > head2 -> [] @ minus([head1] @ xs1, xs2)
 
 // 40.3.1
