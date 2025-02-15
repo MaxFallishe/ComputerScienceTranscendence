@@ -11,12 +11,12 @@ let f n =
 
 // 47.4.2
 let fibo n =
-    if n = 1 then 0
-    elif n = 2 then 1
+    if n = 0 then 0
+    elif n = 1 then 1
     else
         let x1 = ref 0
         let x2 = ref 1
-        let refN = ref(n - 2)
+        let refN = ref(n - 1)
         while refN.contents > 0 do
             let mid = x1.contents
             x1.contents <- x2.contents
