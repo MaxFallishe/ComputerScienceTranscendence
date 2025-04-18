@@ -57,6 +57,17 @@ WITH
         JOIN dwarf_equipment de ON da.dwarf_id = de.dwarf_id
         WHERE da.end_date IS NULL
         GROUP BY ms.squad_id
+    ),
+    total_training_sessions_agg AS (
+        SELECT ms.squad_id, COUNT(st.schedule_id) AS total_training_sessions
+        FROM military_squads ms
+        JOIN squad_training st ON ms.squad_id = st.squad_id
+        GROUP BY  ms.squad_id
+    ),
+    avg_training_effectiveness_agg AS (
+        SELECT st.squad_id, AVG(st.effectiveness::DECIMAL) AS avg_training_effectiveness
+        FROM squad_training st
+        GROUP BY st.squad_id
     )
 
 SELECT
@@ -99,6 +110,13 @@ SELECT
     -- "avg_equipment_quality" --
     ROUND(aeqa.avg_equipment_quality, 2) AS avg_equipment_quality,
 
+    -- "total_training_sessions" --
+    ttsa.total_training_sessions,
+
+    -- "avg_training_effectiveness" --
+    atea.avg_training_effectiveness,
+
+
     -- "related-entities" --
     jsonb_build_object(
             'member_ids', (SELECT jsonb_agg(sm.dwarf_id)
@@ -124,6 +142,8 @@ LEFT JOIN casualty_enemy_rate_agg cera ON ms.squad_id = cera.squad_id
 LEFT JOIN current_members_agg cma ON ms.squad_id = cma.squad_id
 LEFT JOIN total_members_ever_agg tmea ON ms.squad_id = tmea.squad_id
 LEFT JOIN avg_equipment_quality_agg aeqa ON ms.squad_id = aeqa.squad_id
+LEFT JOIN total_training_sessions_agg ttsa ON ms.squad_id = ttsa.squad_id
+LEFT JOIN avg_training_effectiveness_agg atea ON ms.squad_id = atea.squad_id
 
 
 ) AS result;
