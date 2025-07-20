@@ -58,7 +58,6 @@ object FixedRaceConditionExample {
 }
 
 
-
 // An example of a deadlock problem situation
 object DeadlockExample {
     private val lock1 = Any()
@@ -115,8 +114,8 @@ object DeadlockExample {
 
 // In the example above (DeadlockExample), we saw an example of how two objects are locked in threads at once without
 // releasing the first object, which then caused a deadlock, and none of the threads could complete their action.
-// Inside the FixedDeadlockExample, the lock of the second object was removed from the lock body of the first object,
-// so that the second thread intercepts control, but the deadlock does not occur.
+// Inside the FixedDeadlockExample, both thread1 and thread2 capture locks in the same order: first lock1 and then lock2.
+// This prevents a situation where one thread is waiting for a lock held by another thread to be captured.
 object FixedDeadlockExample {
     private val lock1 = Any()
     private val lock2 = Any()
@@ -125,23 +124,24 @@ object FixedDeadlockExample {
         val thread1 = Thread {
             synchronized(lock1) {
                 println("Thread 1 acquired lock1")
-                Thread.sleep(100)
-            }
 
-            synchronized(lock2) {
-                println("Thread 1 acquired lock2")
-                Thread.sleep(100)
+                Thread.sleep(50)
+
+                synchronized(lock2) {
+                    println("Thread 1 acquired lock2")
+                }
             }
         }
 
         val thread2 = Thread {
-            synchronized(lock2) {
-                println("Thread 2 acquired lock1")
-                Thread.sleep(100)
-            }
             synchronized(lock1) {
-                println("Thread 2 acquired lock2")
-                Thread.sleep(100)
+                println("Thread 2 acquired lock1")
+
+                Thread.sleep(50)
+
+                synchronized(lock2) {
+                    println("Thread 2 acquired lock2")
+                }
             }
         }
 
