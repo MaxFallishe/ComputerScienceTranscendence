@@ -1,29 +1,83 @@
-// Task number: 1.8
-// Short description: Sum two linked lists element-wise
-// Time complexity: O(N)
-// Space Complexity: O(N)
+// Task number: 1.7
+// Short description: Unittests for LinkedList class functionality
+// Time complexity: -
+// Space Complexity: -
 
+import org.junit.Test;
 
-public final class LinkedListFirstAddition {
+import java.util.*;
 
-    private LinkedListFirstAddition() {}
+import static org.junit.Assert.*;
 
-    public static LinkedList overlapWithSummation(LinkedList _firstList, LinkedList _secondList) {
-        if (_firstList.count() != _secondList.count())
-            throw new IllegalArgumentException("Both _firstList and _secondList must have equal size.");
+public class LinkedListFirstAdditionTest {
 
-        LinkedList overlappedList = new LinkedList();
-        Node nodeX = _firstList.head;
-        Node nodeY = _secondList.head;
+    @Test
+    public void testOverlapWithSummationWithEmptyLists() {
+        LinkedList listX = new LinkedList();
+        listX.addInTail(new Node(1));
 
-        while (nodeX != null) {
-            int summedValue = nodeX.value + nodeY.value;
-            overlappedList.addInTail(new Node(summedValue));
-            nodeX = nodeX.next;
-            nodeY = nodeY.next;
-        }
+        LinkedList listY = new LinkedList();
+        listY.addInTail(new Node(10));
 
-        return overlappedList;
+        LinkedList overlappedList = LinkedListFirstAddition.overlapWithSummation(listX, listY);
+
+        assertEquals(11, overlappedList.head.value);
+        assertEquals(11, overlappedList.tail.value);
     }
+
+    @Test
+    public void testOverlapWithSummationWithListsOfSingleValue() {
+        LinkedList listX = new LinkedList();
+        LinkedList listY = new LinkedList();
+        LinkedList overlappedList = LinkedListFirstAddition.overlapWithSummation(listX, listY);
+
+        assertNull(overlappedList.head);
+        assertNull(overlappedList.tail);
+    }
+
+    @Test
+    public void testOverlapWithSummationWithListsOfSeveralNodes() {
+        LinkedList listX = new LinkedList();
+        listX.addInTail(new Node(1));
+        listX.addInTail(new Node(2));
+        listX.addInTail(new Node(3));
+
+        LinkedList listY = new LinkedList();
+        listY.addInTail(new Node(10));
+        listY.addInTail(new Node(20));
+        listY.addInTail(new Node(30));
+
+        LinkedList overlappedList = LinkedListFirstAddition.overlapWithSummation(listX, listY);
+        Node overlappedListNode1 = overlappedList.head;
+        Node overlappedListNode2 = overlappedListNode1.next;
+        Node overlappedListNode3 = overlappedListNode2.next;
+
+        assertEquals(3, overlappedList.count());
+        assertEquals(11, overlappedListNode1.value);
+        assertEquals(22, overlappedListNode2.value);
+        assertEquals(33, overlappedListNode3.value);
+
+        assertEquals(11, overlappedList.head.value);
+        assertEquals(33, overlappedList.tail.value);
+
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testOverlapWithSummationWithListsOfSeveralNodesButListsHasDifferentSizes() {
+        LinkedList listX = new LinkedList();
+        listX.addInTail(new Node(1));
+        listX.addInTail(new Node(2));
+        listX.addInTail(new Node(3));
+        listX.addInTail(new Node(4));
+
+        LinkedList listY = new LinkedList();
+        listY.addInTail(new Node(10));
+        listY.addInTail(new Node(20));
+        listY.addInTail(new Node(30));
+
+        LinkedList overlappedList = LinkedListFirstAddition.overlapWithSummation(listX, listY);
+
+    }
+
 }
 
