@@ -1,6 +1,6 @@
 import java.util.*;
 
-// Task number: 1.11
+// Task number: 2.11
 // Short description: Filter bidirectional linked list
 // Time complexity: O(N^2)
 // Space Complexity: O(1)

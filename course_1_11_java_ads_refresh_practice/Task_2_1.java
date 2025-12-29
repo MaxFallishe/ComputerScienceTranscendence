@@ -1,4 +1,4 @@
-// Task number: 1.9
+// Task number: 2.9
 // Short description: Reverse bidirectional linked list
 // Time complexity: O(N)
 // Space Complexity: O(1)

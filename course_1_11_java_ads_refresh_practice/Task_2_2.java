@@ -1,6 +1,6 @@
 import java.util.*;
 
-// Task number: 1.10
+// Task number: 2.10
 // Short description: Check is there any loops inside bidirectional linked list
 // Time complexity: O(N)
 // Space Complexity: O(N)

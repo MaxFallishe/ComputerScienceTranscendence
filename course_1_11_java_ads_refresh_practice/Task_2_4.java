@@ -1,4 +1,4 @@
-// Task number: 1.12
+// Task number: 2.12
 // Short description: Merge two bidirectional linked lists to a filtered bidirectional linked list
 // Time complexity: O(N^2)
 // Space Complexity: O(1)

@@ -23,7 +23,7 @@ public class LinkedList2 {
         this.tail = _item;
     }
 
-    // Task number: 1.1
+    // Task number: 2.1
     // Short description: Implement method of finding node by value that nearest to head node
     // Time complexity: O(N)
     // Space Complexity: O(1)
@@ -38,7 +38,7 @@ public class LinkedList2 {
         return null;
     }
 
-    // Task number: 1.2
+    // Task number: 2.2
     // Short description: Implement method of finding all nodes by value
     // Time complexity: O(N)
     // Space Complexity: O(N)
@@ -90,7 +90,7 @@ public class LinkedList2 {
         return false;
     }
 
-    // Task number: 1.4
+    // Task number: 2.4
     // Short description: Implement method of removing all nodes with specific value
     // Time complexity: O(N^2)  # can be O(N) without using this.remove()
     // Space Complexity: O(1)
@@ -100,7 +100,7 @@ public class LinkedList2 {
             isNodeRemoved = this.remove(_value);
     }
 
-    // Task number: 1.5, 1.6
+    // Task number: 2.5, 2.6
     // Short description: Implement method that insert new node after existing in linked list, if _nodeAfter is null - insert as first element
     // Time complexity: O(1)
     // Space Complexity: O(1)
@@ -131,7 +131,7 @@ public class LinkedList2 {
 
     }
 
-    // Task number: 1.7
+    // Task number: 2.7
     // Short description: Implement method for delete all nodes from linked list
     // Time complexity: O(1)
     // Space Complexity: O(1)
