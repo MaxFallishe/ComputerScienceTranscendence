@@ -101,12 +101,6 @@ public class DynArray<T> {
         if (index >= count)
             throw new IndexOutOfBoundsException("Index: " + index + ", Currently " + count + " elements in array, so you can use index from 0 to " + (count - 1));
 
-        if ((double) capacity / count < 2.0) {
-            int newCapacity = (int) (capacity / BUFFER_DECREASE_COEFFICIENT);
-            if (newCapacity < MIN_AVAILABLE_CAPACITY)
-                newCapacity = MIN_AVAILABLE_CAPACITY;
-            makeArray(newCapacity);
-        }
 
         array[index] = null;
         for (int i = index; i < count - 1; i++) {
@@ -115,6 +109,14 @@ public class DynArray<T> {
             array[i + 1] = tmp;
         }
         count--;
+
+        if ((double) count / capacity < 0.5) {
+            int newCapacity = (int) (capacity / BUFFER_DECREASE_COEFFICIENT);
+            if (newCapacity < MIN_AVAILABLE_CAPACITY)
+                newCapacity = MIN_AVAILABLE_CAPACITY;
+            makeArray(newCapacity);
+        }
+
     }
 
 }

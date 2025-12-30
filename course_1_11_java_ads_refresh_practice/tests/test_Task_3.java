@@ -629,6 +629,7 @@ public class DynArrayTest {
         assertEquals(32, arr.capacity);
 
         arr.remove(0);
+        arr.remove(0);
 
         int nullsCount = (int) Arrays.stream(arr.array)
                 .filter(Objects::isNull)
@@ -638,10 +639,34 @@ public class DynArrayTest {
                 .count();
 
         assertEquals(21, arr.array.length);
-        assertEquals(16, arr.count);
+        assertEquals(15, arr.count);
         assertEquals(21, arr.capacity);
+        assertEquals(15, notNullsCount);
+        assertEquals(6, nullsCount);
+    }
+
+    @Test
+    public void testRemoveOneElementWithIncreasedArray() {
+        DynArray<Integer> arr = new DynArray<>(Integer.class);
+        for (int i = 0; i <= 16; i++) {
+            arr.append(i);
+        }
+        assertEquals(32, arr.capacity);
+
+        arr.remove(0);
+
+        int nullsCount = (int) Arrays.stream(arr.array)
+                .filter(Objects::isNull)
+                .count();
+        int notNullsCount = (int) Arrays.stream(arr.array)
+                .filter(Objects::nonNull)
+                .count();
+
+        assertEquals(32, arr.array.length);
+        assertEquals(16, arr.count);
+        assertEquals(32, arr.capacity);
         assertEquals(16, notNullsCount);
-        assertEquals(5, nullsCount);
+        assertEquals(16, nullsCount);
     }
 
 
