@@ -4,6 +4,13 @@ import java.util.Arrays;
 
 // Task number: 3.7
 // Short description: Implement Multidimensional Dynamic Array
+// Reflection:
+// For me, the practice with a multidimensional dynamic array turned out to be more like a study of how this can be done,
+// unfortunately, I might like to focus a little more at the moment on the implementation itself with already a lot of
+// limitations, perhaps even a boiler plate of the code. The idea of deploying multiple nested dimensions in one straigh
+// t line looks very strong, it's not in my solution, but I can well admit that it is stronger and more effective than
+// just nested arrays (they have much more problems with expansion), and there is a lot of code, looking at the code
+// again, I can say what exactly can be done better, shorter and flatter.
 public class DynArraySecondAddition<T> {
 
     private static class DynArray<E> {

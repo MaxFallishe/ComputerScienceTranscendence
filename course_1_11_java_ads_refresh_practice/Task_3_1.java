@@ -3,6 +3,15 @@ import java.util.Arrays;
 
 // Task number: 3.6
 // Short description: Implement Dynamic Array based on "Bank method"
+// Reflection:
+// In my implementation of the dynamic array based on the banking method, the main goal for me was to test in practice
+// how the depreciation assessment method works and that it really guarantees that the bank will not go into an infinite
+// disadvantage and heavy operations are really compensated by lighter and more frequent ones. Unlike the proposed
+// solution, where it is proposed to start increasing the buffer at the time of reaching the required number of coins
+// and actually spend them, my banking method rather accompanies the program and rather performs the role of an
+// invariant of correctness that heavy operations are compensated by light ones, at least that was the idea. For me,
+// the mechanism itself has become much more understandable, and how the banking method should be applied so that you
+// can make sure that complexity is also predictably amortized over a long horizon.
 public class DynArrayFirstAddition<T> {
     public T[] array;
     public int count;
