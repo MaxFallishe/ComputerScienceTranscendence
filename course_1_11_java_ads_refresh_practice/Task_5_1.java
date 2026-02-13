@@ -30,6 +30,12 @@ public class QueueFirstAddition<T> {
     // Short description: Implement method that "rotate" queue
     // Time complexity: O(N)
     // Space Complexity: O(N)
+    // ---Refleсtion.---
+    // During the execution, the main difficulty was the one that I set myself. I immediately realized that you can just
+    // push items from one end of the queue and push them into the other, but I was worried about the suboptimality
+    // that occurs with large amounts of "crunching", for example, when there are 10 items but you need to make 1000
+    // shifts. Therefore, I decided to make a solution through sabers where it would be possible to immediately
+    // calculate the desired shift and not move the elements too many times.
     public void shift(int steps) {
         if (steps < 0)
             throw new IllegalArgumentException("Amount of steps should be 0 or greater");

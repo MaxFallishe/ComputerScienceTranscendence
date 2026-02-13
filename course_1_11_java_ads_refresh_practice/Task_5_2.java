@@ -3,6 +3,9 @@ import java.util.ArrayDeque;
 
 // Task number: 5.4
 // Short description: Implement a queue using two stacks.
+// ---Refleсtion.---
+// The basic concept in the task of implementing a queue through two stacks was also quite clear, most of all it
+// took the calculation of the asymptotic complexity itself, which really managed to get closer to o(1).
 public class QueueSecondAddition<T> {
     ArrayDeque<T> stackAlpha;
     ArrayDeque<T> stackBeta;

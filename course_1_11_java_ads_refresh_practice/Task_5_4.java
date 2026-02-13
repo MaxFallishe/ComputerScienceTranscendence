@@ -2,6 +2,11 @@ import java.lang.reflect.Array;
 
 // Task number: 5.6
 // Short description: Implement a circular (cyclic buffer) queue with a fixed-size static array.
+// ---Refleсtion.---
+// On the one hand, it was not so difficult to implement a cyclic queue inside a fairly rigid data structure, but still,
+// the mechanism of pointer control itself, especially in edge cases, will make you think carefully about implementations.
+// One of the main points that I would definitely remember is that you should select one pointer (front or back) and
+// already adjust the index to it, which will allow you not to overwrite the values.
 public class QueueFourthAddition<T> {
 
     private final T[] storage;

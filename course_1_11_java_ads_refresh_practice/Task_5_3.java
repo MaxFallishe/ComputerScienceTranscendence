@@ -36,6 +36,9 @@ public class QueueThirdAddition<T> {
 
     // Task number: 5.5
     // Short description: Implement a function that reverses all the items in the queue.
+    // ---Refleсtion.---
+    // In the task of deploying the queue, I managed to fulfill my idea that when implementing a queue through two stacks,
+    // it is possible to simply swap these stacks correctly and then the queue will be reversed.
     public void reverse() {
         ArrayDeque<T> stackGamma = stackAlpha;
         stackAlpha = stackBeta;
