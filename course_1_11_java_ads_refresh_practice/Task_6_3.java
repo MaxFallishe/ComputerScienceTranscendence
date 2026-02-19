@@ -2,6 +2,14 @@ import java.util.Arrays;
 
 // Task number: 6.6
 // Short description: Implement deque methods of adding and removing elements with o(1) efficiency.
+// ---Refleсtion.---
+// In implementing deque through a dynamic array, I used the option of writing values to arrays by index.
+// This makes it possible to write values to a dynamic array in a format that can easily be identified with the queue format.
+// By storing two pointers to the beginning and end of the queue (at the beginning, the value of both pointers is 0)
+// and correctly recalculating the indexes (avoiding negative values), it is possible to write values inside
+// a dynamic value like a carousel. When the indexes intersect, it is enough to automatically expand the internal
+// buffer (the dynamic array itself) and the queue will continue working. I tried to work exclusively with a dynamic
+// array as much as possible in the implementation, and implement the interface under deque.
 public class DequeThirdAddition<T> {
     public int capacity;
     public int size;
