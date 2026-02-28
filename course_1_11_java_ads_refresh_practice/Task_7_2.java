@@ -201,6 +201,14 @@ public class OrderedListSecondAddition<T> {
     // Short description: A method for merging two ordered lists.
     // Time complexity: O(N)
     // Space Complexity: O(N)
+    // ---Refleсtion.---
+    // Globally, connecting two or more sorted lists is not a complicated operation at the algorithm level, the lists are
+    // already sorted, and it is enough for us to check gradually by iterating from the end (with smaller values) of the list
+    // which of the values of the lists is smaller than all the presented ones, after which we remove this value from the original
+    // list (in fact, we simply shift the pointer of a specific list by one value. However, with a specific implementation
+    // in the code, I had to use a large number of conditional statements inside the main loop to support the logic with the
+    // _ascending flag, which determines the order of elements in the array (asc or desc). I'm sure there is a more elegant
+    // and shorter solution with java where you can avoid constantly checking the status of the _ascending parameter.
     public OrderedListSecondAddition<T> mergeList(OrderedListSecondAddition<T> l1, OrderedListSecondAddition<T> l2) {
         OrderedListSecondAddition<T> resultList = new OrderedListSecondAddition<T>(_ascending);
         if (l1.head == null) {

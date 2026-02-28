@@ -1270,5 +1270,56 @@ public class OrderedListThirdAdditionTest {
         assertNull(orderedList.head.prev);
     }
 
+    @Test
+    public void testIsSublistFewExistingValuesWithExtraDuplicateAtStartWithAscOrder() {
+        OrderedListThirdAddition<Number> orderedList = new OrderedListThirdAddition<>(true);
+        OrderedListThirdAddition<Number> sublist = new OrderedListThirdAddition<>(true);
+
+        sublist.add(1);
+        sublist.add(2);
+        sublist.add(3);
+
+        orderedList.add(1);
+        orderedList.add(1);
+        orderedList.add(2);
+        orderedList.add(3);
+
+        boolean result = orderedList.isSublist(sublist);
+
+        assertTrue(result);
+        assertEquals(1, orderedList.head.value);
+        assertEquals(3, orderedList.tail.value);
+        assertNull(orderedList.tail.next);
+        assertNull(orderedList.head.prev);
+    }
+
+    @Test
+    public void testIsSublistFewExistingValuesWithExtraDuplicatesAtStartWithAscOrder() {
+        OrderedListThirdAddition<Number> orderedList = new OrderedListThirdAddition<>(true);
+        OrderedListThirdAddition<Number> sublist = new OrderedListThirdAddition<>(true);
+
+        sublist.add(1);
+        sublist.add(1);
+        sublist.add(1);
+        sublist.add(2);
+        sublist.add(3);
+
+        orderedList.add(1);
+        orderedList.add(1);
+        orderedList.add(1);
+        orderedList.add(1);
+        orderedList.add(1);
+        orderedList.add(2);
+        orderedList.add(3);
+
+        boolean result = orderedList.isSublist(sublist);
+
+        assertTrue(result);
+        assertEquals(1, orderedList.head.value);
+        assertEquals(3, orderedList.tail.value);
+        assertNull(orderedList.tail.next);
+        assertNull(orderedList.head.prev);
+    }
+
 }
 

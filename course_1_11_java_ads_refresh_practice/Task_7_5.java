@@ -89,6 +89,17 @@ public class OrderedListFifthAddition<T> {
 
     }
 
+    // Task number: 7.12
+    // Short description: The index of the specified item in the list is O(log N).
+    // Time complexity: O(N)
+    // Space Complexity: O(1)
+    // ---Refleсtion.---
+    // In my case, the very first thought was about binary search (which is used in the reference version)
+    // when I saw that the complexity of logN was needed. However, I wanted to try to implement this complexity without
+    // changing the type of main storage from a linked list to a conditional dynamic array, unfortunately,
+    // I could not discover any special interesting options, I liked the idea of conditionally storing links to a
+    // limited number of nodes, which helped me jump through them faster in search of the right one, but in attempts
+    // to implement them they required complex logic and in general lots of extra space.
     public Node<T> find(T val) {
         if (head == null || tail == null)
             return null;

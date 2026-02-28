@@ -267,6 +267,15 @@ public class OrderedListFourthAddition<T> {
     // Short description: A method for getting the most frequent value in ordered list.
     // Time complexity: O(N)
     // Space Complexity: O(1)
+    // ---Refleсtion.---
+    // In the implementation of the algorithm for finding the most common value, I went through a fairly simple,
+    // understandable implementation, we take the first value and wind up the counter of identical elements until each
+    // next value is equal to the current one, as soon as a new value begins, we fix the new maximum number of elements
+    // and the element itself, then continue in a similar sequence. In fact, all the logic goes around
+    // 4 values (counter, maxCounter, val, maxVal). The solution practically repeats the reference one. Also, in general,
+    // you can finish off the algorithm by optimizing the verification of the number of remaining elements, if they are less
+    // than the current maximum value, then there is no point in checking further, but not to say that it would give
+    // a significant gain.
     public T getMostFrequentValue() {
         if (head == null)
             return null;
