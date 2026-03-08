@@ -3,6 +3,14 @@ import java.math.BigInteger;
 
 // Task number: 8.1
 // Short description: Implement a dynamic hash table.
+// ---Reflection.---
+// Implementing a dynamic hash table turned out to be a fairly simple task from the point of view of the required
+// algorithm. It is necessary to set the required limit at which the hash table will expand (in my solution 100%,
+// in the reference 80% is proposed) and then recreate the hash table in a larger array. The most important thing
+// is that for each element, you need to recalculate its order in a new array, because if we try to move elements
+// from their current positions, then there will be a situation with duplicate values in completely different
+// locations of the array + problems with deleting existing values since the position of the hash function will
+// not match.
 public class HashTableFirstAddition {
     public int size;
     public int step;

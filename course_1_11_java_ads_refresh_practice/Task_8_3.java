@@ -3,6 +3,13 @@ import java.util.Objects;
 
 // Task number: 8.3
 // Short description: Implement a hash table with protection against collision attacks.
+// ---Reflection.---
+// In my case the "salt" method does not work and does not reduce the number of collisions if the original hash function does not
+// imply dependence on the order of characters, as it turned out in these solutions.
+// Unfortunately, the data set I selected for the attack could not use a static salt to resolve the problem with collisions.
+// According to the reference version, making a static salt was not the best solution. With a static salt,
+// the same values will be hashed to the same result. It is better to add a short dynamic salt to the values,
+// add small random values to the hash, etc. And store in the table, respectively, an entity with two fields: value and salt.
 public class HashTableThirdAddition {
     public int size;
     public int step;
