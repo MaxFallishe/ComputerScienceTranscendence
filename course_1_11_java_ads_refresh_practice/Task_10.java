@@ -3,11 +3,12 @@
 public class PowerSet {
 
     public static final int HASH_TABLE_SIZE = 131072;
-    public String[] slots;
+    public static final String STATIC_SALT = "FdbjTr";
+    public java.util.ArrayList<String>[] slots;
     private int size;
 
     public PowerSet() {
-        this.slots = new String[HASH_TABLE_SIZE];
+        slots = (java.util.ArrayList<String>[]) new java.util.ArrayList[HASH_TABLE_SIZE];
         this.size = 0;
     }
 
@@ -20,23 +21,9 @@ public class PowerSet {
     }
 
     public int customHash(String value) {
-        int hashResult = value.hashCode();
+        int hashResult = (value + STATIC_SALT).hashCode();
         hashResult ^= (hashResult >>> 16);
         return hashResult & (HASH_TABLE_SIZE - 1);
-    }
-
-    public int seekSlot(String value) {
-        int start = this.customHash(value);
-        int indx = start;
-
-        do {
-            if (slots[indx] == null || slots[indx].equals(value)) {
-                return indx;
-            }
-            indx = (indx + 1) & (HASH_TABLE_SIZE - 1);
-        } while (indx != start);
-
-        return -1;
     }
 
     // Task number: 10.1.2
@@ -44,12 +31,15 @@ public class PowerSet {
     // Time complexity: O(1)
     // Space Complexity: O(1)
     public void put(String value) {
-        int indx = this.seekSlot(value);
-        if (slots[indx] != null) {
-            return;
+        int index = customHash(value);
+
+        if (slots[index] == null)
+            slots[index] = new java.util.ArrayList<>();
+
+        if (!slots[index].contains(value)) {
+            slots[index].add(value);
+            size += 1;
         }
-        slots[indx] = value;
-        size += 1;
     }
 
     // Task number: 10.1.3
@@ -57,18 +47,11 @@ public class PowerSet {
     // Time complexity: O(1)
     // Space Complexity: O(1)
     public boolean get(String value) {
-        int start = this.customHash(value);
-        int indx = start;
-        while (slots[indx] != null) {
-            if (slots[indx].equals(value)) {
-                return true;
-            }
-            indx = (indx + 1) & (HASH_TABLE_SIZE - 1);
-            if (indx == start) {
-                break;
-            }
-        }
-        return false;
+        int indx = customHash(value);
+
+        if (slots[indx] == null)
+            return false;
+        return slots[indx].contains(value);
     }
 
     // Task number: 10.2.1
@@ -76,15 +59,15 @@ public class PowerSet {
     // Time complexity: O(1)
     // Space Complexity: O(1)
     public boolean remove(String value) {
-        int indx = seekSlot(value);
-        if (indx == -1)
+        int indx = customHash(value);
+        if (this.slots[indx] == null)
             return false;
-        if (slots[indx] == null) {
-            return false;
-        }
-        slots[indx] = null;
-        size -= 1;
-        return true;
+        boolean removed = slots[indx].remove(value);
+        if (removed)
+            size -= 1;
+        if (slots[indx].isEmpty())
+            slots[indx] = null;
+        return removed;
     }
 
     // Task number: 10.2.2
@@ -94,9 +77,12 @@ public class PowerSet {
     public PowerSet intersection(PowerSet set2) {
         PowerSet result = new PowerSet();
 
-        for (String value : this.slots) {
-            if (value != null && set2.get(value)) {
-                result.put(value);
+        for (java.util.ArrayList<String> bucket : this.slots) {
+            if (bucket == null)
+                continue;
+            for (String value : bucket) {
+                if (set2.get(value))
+                    result.put(value);
             }
         }
         return result;
@@ -108,13 +94,20 @@ public class PowerSet {
     // Space Complexity: O(N)
     public PowerSet union(PowerSet set2) {
         PowerSet result = new PowerSet();
-        for (String value : this.slots) {
-            if (value != null)
+        for (java.util.ArrayList<String> bucket : this.slots) {
+            if (bucket == null)
+                continue;
+            for (String value : bucket) {
                 result.put(value);
+            }
         }
-        for (String value : set2.slots) {
-            if (value != null)
+
+        for (java.util.ArrayList<String> bucket : set2.slots) {
+            if (bucket == null)
+                continue;
+            for (String value : bucket) {
                 result.put(value);
+            }
         }
 
         return result;
@@ -126,10 +119,17 @@ public class PowerSet {
     // Space Complexity: O(N)
     public PowerSet difference(PowerSet set2) {
         PowerSet result = new PowerSet();
-        for (String value : this.slots) {
-            if (value != null && !(set2.get(value)))
-                result.put(value);
+
+        for (java.util.ArrayList<String> bucket : this.slots) {
+            if (bucket == null)
+                continue;
+            for (String value : bucket) {
+                if (!set2.get(value)) {
+                    result.put(value);
+                }
+            }
         }
+
         return result;
     }
 
@@ -138,9 +138,15 @@ public class PowerSet {
     // Time complexity: O(N)
     // Space Complexity: O(N)
     public boolean isSubset(PowerSet set2) {
-        for (String value : set2.slots) {
-            if (value != null && !(this.get(value)))
-                return false;
+        for (java.util.ArrayList<String> bucket : set2.slots) {
+            if (bucket == null)
+                continue;
+            for (String value : bucket) {
+                if (!this.get(value)) {
+                    return false;
+                }
+            }
+
         }
         return true;
     }
@@ -153,9 +159,15 @@ public class PowerSet {
         if (this.size != set2.size)
             return false;
 
-        for (String value : this.slots) {
-            if (value != null && !(set2.get(value)))
-                return false;
+        for (java.util.ArrayList<String> bucket : this.slots) {
+            if (bucket == null)
+                continue;
+            for (String value : bucket) {
+                if (!set2.get(value)) {
+                    return false;
+                }
+            }
+
         }
         return true;
     }

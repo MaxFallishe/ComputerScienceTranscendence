@@ -129,6 +129,21 @@ public class PowerSetTest {
     }
 
     @Test
+    public void testRemoveWithElemenetsWithSameHash() {
+        PowerSet powerSet = new PowerSet();
+
+        powerSet.put("Aa");  // Hash is 102287
+        powerSet.put("BB");  // Hash is 102287
+
+        assertTrue(powerSet.get("Aa"));
+        assertTrue(powerSet.get("BB"));
+
+        assertTrue(powerSet.remove("Aa"));
+
+        assertTrue(powerSet.remove("BB"));
+    }
+
+    @Test
     public void testRemoveWithFewUniqueElementsAndFullWipe() {
         PowerSet powerSet = new PowerSet();
         powerSet.put("ankh");
