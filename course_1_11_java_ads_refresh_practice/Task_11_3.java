@@ -61,6 +61,13 @@ public class BloomFilterThirdAddition {
     // that could predict at least an approximate pool of values that might be inside. In the current implementation,
     // I tried to go through all possible combinations, but the moment with the resolution
     // of conditional collisions did not work out.
+    // ---Reflection.---
+    // The reference solution highlights the fact that any other more efficient solution besides brute force is
+    // unlikely to be possible, but it offers potential options such as studying the domain of input data,
+    // using some kind of similarity metrics, Bayesian approximation, and iteration attempts to avoid false positives.
+    // In the current solution, there was an attempt to restore the source data through brute force, however,
+    // even with a small number of embedded values, the method produced too many potentially corresponding
+    // values of the set.
     public List<String> extractOriginalElements(int targetLen) {
         String bruteForceList = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         List<String> result = new ArrayList<>();

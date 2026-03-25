@@ -44,6 +44,12 @@ public class BloomFilterFirstAddition {
     // Short description: Implement method for merging few bloom filter in one;
     // Time complexity: O(K), k - bloomFilters length
     // Space Complexity: O(1)
+    // ---Reflection.---
+    // Merging several Blum Filters is a fairly simple operation, including in the reference solution.
+    // Using the "or" operator, you can overlay them on top of each other in just one operation. It is important
+    // to take into account that the length of the Blum Filters and the hash functions used should be the same,
+    // but it is quite logical that the addition has consequences in the form of adding the probability
+    // of false positives.
     public void merge(BloomFilterFirstAddition[] bloomFilters) {
         for (BloomFilterFirstAddition bloomFilter : bloomFilters) {
             if (this.filter_len != bloomFilter.filter_len) {

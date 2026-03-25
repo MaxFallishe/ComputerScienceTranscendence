@@ -51,6 +51,12 @@ public class BloomFilterSecondAddition {
     // Short description: Implement method for remove element from bloom filter.
     // Time complexity: O(N)
     // Space Complexity: O(1)
+    // ---Reflection.---
+    // In order to adapt the Blum Filter to the possibility of removing added elements in the current solution,
+    // we had to change the class structure itself and add counters for each slot. This allows you to first check
+    // the presence of an item in the value store, and then reduce the values of the desired cells. Unfortunately,
+    // even in such an implementation, it is possible that after deleting an element, the element will somehow be
+    // present in memory due to the fact that there are two other elements occupying the corresponding slots.
     public void remove(String str1) {
         int firstIndx = this.hash1(str1);
         int secondIndx = this.hash2(str1);

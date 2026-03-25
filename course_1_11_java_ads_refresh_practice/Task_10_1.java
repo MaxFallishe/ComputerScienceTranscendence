@@ -127,6 +127,12 @@ public class PowerSetFirstAddition {
     // Short description: Implement a method that return cartesian product of two sets.
     // Time complexity: O(N*M)
     // Space Complexity: O(N*M)
+    // ---Reflection.---
+    // As part of the implementation of the method, it turned out to use the same algorithm as suggested
+    // by the reference solution - two nested loops in which sets are multiplied through the creation
+    // of tuples (although the current implementation uses just a string simulating the desired structure).
+    // Nevertheless, the best solution would be to implement it through recursion, which supports multiplication
+    // of several sets at once.
     public PowerSetFirstAddition cartesianProduct(PowerSetFirstAddition set2) {
         PowerSetFirstAddition result = new PowerSetFirstAddition();
         for (String value1 : this.slots) {

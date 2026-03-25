@@ -141,6 +141,12 @@ public class PowerSetThirdAddition {
     // Short description: Implement a method that return pairs (value + num of entries) in set (Bag).
     // Time complexity: O(N)
     // Space Complexity: O(N)
+    // ---Reflection.---
+    // When reassembling the functionality of the Bag class, all the methods had to be reworked, as the logic of adding,
+    // deleting, and verifying the presence of an element changed. From the point of view of data storage, an additional
+    // array "counters" has been added in which the number of elements is stored. The current solution corresponds
+    // to the idea of an eathlon version. It's nice that we managed to implement the "getFrequencies" method quite
+    // elegantly in java syntax (using IntStream).
     public Map<String, Integer> getFrequencies() {
         return IntStream.range(0, HASH_TABLE_SIZE)
                 .filter(i -> slots[i] != null)
