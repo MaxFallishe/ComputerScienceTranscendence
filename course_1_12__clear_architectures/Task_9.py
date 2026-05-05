@@ -28,14 +28,6 @@ class RobotApi:
         return self.make(command)
 
 
-def transfer_to_cleaner_to_cleaner(message):
-    print(message)
-
-
-def double_move(transfer_to_cleaner, dist, state):
-    return pure_robot.move(transfer_to_cleaner, dist * 2, state)
-
-
 api = RobotApi()
 api.setup(pure_robot)
 
