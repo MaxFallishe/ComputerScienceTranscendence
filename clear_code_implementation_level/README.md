@@ -255,10 +255,6 @@ async def get_survey_metainfo_list(self) -> list[SurveyMetaInfo]:
 
     for survey_setting in AppSettings.engineering_culture_surveys:
         survey_id = survey_setting.survey_id
-
-        # The beginning of this block is partially outside the screenshot.
-        # start_date / end_date / response_date are used below.
-
         quarter_ref_date = end_date or start_date
 
         year_n_quarter = None
@@ -530,9 +526,6 @@ async def get_survey_metainfo_list(self) -> list[SurveyMetaInfo]:
 
     for survey_setting in AppSettings.engineering_culture_surveys:
         survey_id = survey_setting.survey_id
-
-        # The beginning of this block is partially outside the screenshot.
-        # start_date / end_date / response_date are used below.
 
         quarter_ref_date = end_date or start_date
 
